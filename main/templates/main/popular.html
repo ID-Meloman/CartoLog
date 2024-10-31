@@ -1,0 +1,29 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} CartoLog {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/popular.css' %}"> {% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<h2> Do you wanna car? </h2>
+
+<div class="card-container">
+    {% for item in cars%}
+    <div class="card" style="width: 18rem;">
+        {% if item.car_model.image %}  <!-- Проверяем, есть ли изображение -->
+      <img src="{{ item.car_model.image.url }}" class="card-img-top" alt="{{ item.car_model.model_name }}">
+    {% else %}
+      <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image"> <!-- Путь к изображению по умолчанию, если у модели нет изображения -->
+    {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{item.model}}</h5>
+            <p class="card-text">в наличии: {{item.color}}</p>
+            <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

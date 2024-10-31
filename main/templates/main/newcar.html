@@ -1,0 +1,25 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} AddNewCar {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/popular.css' %}"> {% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-bord">
+        {{field}} <br>
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Добавить</button>
+
+    <span>{{ error }}</span>
+</form>
+
+{% endblock %}

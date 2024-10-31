@@ -1,0 +1,18 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} {{article.model_name}} {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/popular.css' %}"> {% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-danger">Удалить</button>
+
+</form>
+
+{% endblock %}

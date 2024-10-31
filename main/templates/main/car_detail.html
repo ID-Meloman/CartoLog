@@ -1,0 +1,27 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} {{article.model_name}} {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/popular.css' %}"> {% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+{% if article.image %}  <!-- Проверяем, есть ли изображение -->
+<img src="{{ article.image.url }}" class="detail-img" alt="{{ article.model_name }}">
+{% else %}
+<img src="{% static 'main/img/logo.png' %}" class="detail-img"
+     alt="Default image"> <!-- Путь к изображению по умолчанию, если у модели нет изображения -->
+{% endif %}
+
+<p>{{article.brand}} - {{article.model_name}}</p>
+<p>Двигатель: {{ article.get_engine_type_display }}</p>
+<p>Привод: {{ article.get_drivetrain_display }}</p>
+<p>Мощность: {{ article.horsepower }} л.с.</p>
+
+
+<a href="{% url 'car_update' article.id %}" class="btn btn-success">Изменить</a>
+<a href="{% url 'car_delete' article.id %}" class="btn btn-danger">Удалить</a>
+
+{% endblock %}
