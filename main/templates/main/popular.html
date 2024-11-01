@@ -1,0 +1,88 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} CartoLog {% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/popular.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMliKLnmY5c9b0CJv18MG8IE1FZnX9czD59lfgd" crossorigin="anonymous">
+{% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<h2> Do you wanna car? </h2>
+
+<div class="form-group">
+    <select id="brand-filter" class="form-control">
+        <option value="">Все марки</option>
+        {% for brand in brands %}
+            <option value="{{ brand.id }}">{{ brand.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="card-container" id="car-list">
+    {% for item in cars %}
+    <div class="card position-relative" style="width: 18rem;">
+        {% if item.image %}
+            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
+        {% else %}
+            <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
+        {% endif %}
+
+        <!-- Сердечко для добавления в избранное -->
+        <button class="btn favorite-btn position-absolute top-0 end-0 m-2 {% if item.is_favorite %}favorite{% endif %}"
+                data-car-id="{{ item.id }}">
+            <i class="fas fa-heart {% if item.is_favorite %}text-danger{% endif %}"></i>
+        </button>
+
+        <div class="card-body">
+            <h5 class="card-title">{{ item.model }}</h5>
+            <p class="card-title">Цвет: {{ item.color }}</p>
+            <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#brand-filter').change(function() {
+        var brandId = $(this).val();
+        $.ajax({
+            url: '{% url "filter_cars" %}',
+            data: {
+                'brand_id': brandId
+            },
+            success: function(data) {
+                $('#car-list').html(data);
+            }
+        });
+    });
+
+    // Обработчик для сердечка
+    $('.favorite-btn').click(function() {
+        var btn = $(this);
+        var carId = btn.data('car-id');
+
+        $.ajax({
+            url: '{% url "toggle_favorite" %}',
+            method: 'POST',
+            data: {
+                'car_id': carId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.is_favorite) {
+                    btn.find('i').addClass('text-danger');  // Изменяем цвет на красный
+                } else {
+                    btn.find('i').removeClass('text-danger'); // Возвращаем цвет черный
+                }
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

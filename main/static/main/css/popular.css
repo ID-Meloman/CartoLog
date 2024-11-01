@@ -1,0 +1,122 @@
+.card-container {
+    display: flex;          /* Используем Flexbox */
+    flex-wrap: wrap;        /* Карточки будут переноситься на новую строку */
+    gap: 20px;              /* Отступы между карточками */
+    padding: 20px;          /* Внутренние отступы для контейнера */
+}
+
+.card {
+    flex: 1 1 18rem;        /* Задаём минимальный размер карточки, но она может масштабироваться */
+    max-width: 18rem;       /* Ограничиваем максимальную ширину карточки */
+}
+
+.card img {
+    width: 100%;            /* Картинка будет занимать всю ширину карточки */
+    height: auto;           /* Высота картинки будет автоматически подстраиваться */
+}
+
+.navbar-buttons {
+    gap: 15px;  /* Отступы между кнопками */
+}
+
+.navbar-icon {
+    width: 20px; /* Ширина и высота изображения, подстраивай под свои нужды */
+    height: auto; /* Высота изображения будет автоматической */
+    display: block; /* Убираем пробелы вокруг изображения */
+}
+
+.detail-img {
+    width: 40%;
+    height: auto;
+}
+.form-group {
+    margin-bottom: 1rem;
+    width: 200px
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+
+.card {
+    width: 18rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.img-top-top {
+    height: 200px;
+    width: 200px;/* Устанавливает фиксированную высоту для изображений */
+    object-fit: cover; /* Подгоняет изображение по высоте, обрезая его по ширине, если нужно */
+    display: block;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px; /* Задаем фиксированную высоту для всей информации */
+}
+
+.card-title {
+    flex-grow: 1; /* Заставляет заголовок занимать доступное пространство */
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.card-text {
+    text-align: center;
+}
+
+.btn {
+    margin-top: auto; /* Отправляет кнопку вниз */
+    align-self: center; /* Центрирует кнопку */
+}
+
+
+.modal-dialog {
+    max-width: 90%; /* Увеличиваем модальное окно до 90% ширины экрана */
+    width: auto; /* Автоматическая ширина для более гибкого подбора */
+}
+
+.modal-body img {
+    max-width: 100%; /* Картинка будет занимать всю доступную ширину в модальном окне */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+}
+
+#modalImage {
+    max-width: 90vw;  /* Максимальная ширина изображения (90% от ширины экрана) */
+    max-height: 90vh; /* Максимальная высота изображения (90% от высоты экрана) */
+    width: auto;      /* Сохраняет пропорции по ширине */
+    height: auto;     /* Сохраняет пропорции по высоте */
+}
+
+
+.favorite-btn .fa-heart {
+    color: black; /* Изначально черный цвет */
+}
+
+.favorite-btn .fa-heart.text-danger {
+    color: red; /* Красный цвет, когда в избранном */
+}

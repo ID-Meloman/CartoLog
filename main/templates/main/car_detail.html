@@ -1,0 +1,154 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}{{ car.model }} - Детали{% endblock %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<div class="container mt-4">
+    <h1>{{ car.model }} - {{ car.configuration.name }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }} - Изображение" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-slide-to="0">
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    {% if car.image_front %}
+                        <img src="{{ car.image_front.url }}" class="img-fluid" alt="Спереди" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-slide-to="1">
+                    {% else %}
+                        <p>Изображение спереди недоступно</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if car.image_side %}
+                        <img src="{{ car.image_side.url }}" class="img-fluid" alt="Сбоку" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-slide-to="2">
+                    {% else %}
+                        <p>Изображение сбоку недоступно</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if car.image_back %}
+                        <img src="{{ car.image_back.url }}" class="img-fluid" alt="Сзади" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-slide-to="3">
+                    {% else %}
+                        <p>Изображение сзади недоступно</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2>Основные характеристики</h2>
+            <p><strong>Цвет:</strong> {{ car.color }}</p>
+            <p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
+            <p><strong>LED фары:</strong> {{ car.led_headlights|yesno:"Да,Нет" }}</p>
+            <p><strong>Противотуманные фары:</strong> {{ car.fog_lights|yesno:"Да,Нет" }}</p>
+            <p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
+            <p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Просмотр изображений</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{{ car.image.url }}" class="d-block w-100" alt="{{ car.model }} - Изображение">
+                            </div>
+                            {% if car.image_front %}
+                            <div class="carousel-item">
+                                <img src="{{ car.image_front.url }}" class="d-block w-100" alt="Изображение спереди">
+                            </div>
+                            {% endif %}
+                            {% if car.image_side %}
+                            <div class="carousel-item">
+                                <img src="{{ car.image_side.url }}" class="d-block w-100" alt="Изображение сбоку">
+                            </div>
+                            {% endif %}
+                            {% if car.image_back %}
+                            <div class="carousel-item">
+                                <img src="{{ car.image_back.url }}" class="d-block w-100" alt="Изображение сзади">
+                            </div>
+                            {% endif %}
+                        </div>
+                        <button class="carousel-control-prev custom-arrow" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next custom-arrow" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Технические характеристики</h2>
+    <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
+    <p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
+    <p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
+    <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
+    <p><strong>Расход по городу:</strong> {{ car.configuration.technical_specs.fuel_consumption_city }} л/100км</p>
+    <p><strong>Расход по трассе:</strong> {{ car.configuration.technical_specs.fuel_consumption_highway }} л/100км</p>
+    <p><strong>Экологический класс:</strong> {{ car.configuration.technical_specs.emissions_class }}</p>
+
+    <h2>Трансмиссия и привод</h2>
+    <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
+    <p><strong>Количество передач:</strong> {{ car.configuration.transmission_drive.gears_count }}</p>
+    <p><strong>Тип привода:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+
+    <h2>Подвеска и тормоза</h2>
+    <p><strong>Тип подвески:</strong> {{ car.configuration.suspension_brakes.suspension_type }}</p>
+    <p><strong>Тип тормозов:</strong> {{ car.configuration.suspension_brakes.brake_type }}</p>
+
+    <h2>Безопасность</h2>
+    <p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
+    <p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
+    <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
+    <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</p>
+    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</p>
+    <p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+
+    <h2>Комфорт</h2>
+    <p><strong>Название уровня комфорта:</strong> {{ car.configuration.comfort.name }}</p>
+    <p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
+    <p><strong>Материал сидений:</strong> {{ car.configuration.comfort.seat_material }}</p>
+    <p><strong>Подогрев сидений:</strong> {{ car.configuration.comfort.seat_heating|yesno:"Да,Нет" }}</p>
+    <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
+    <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
+    <p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+
+    <h2>Мультимедиа</h2>
+    <p><strong>Название мультимедиа:</strong> {{ car.configuration.multimedia_connectivity.name }}</p>
+    <p><strong>Мультимедийная система:</strong> {{ car.configuration.multimedia_connectivity.system }}</p>
+    <p><strong>Bluetooth:</strong> {{ car.configuration.multimedia_connectivity.bluetooth|yesno:"Да,Нет" }}</p>
+    <p><strong>USB-порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports_count }}</p>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('[data-bs-toggle="modal"]').on('click', function() {
+        var slideTo = $(this).data('bs-slide-to');
+        $('#carouselImages').carousel(slideTo);
+    });
+});
+</script>
+
+<style>
+    .custom-arrow .carousel-control-prev-icon,
+    .custom-arrow .carousel-control-next-icon {
+        background-color: black;
+        border-radius: 50%;
+    }
+</style>
+
+{% endblock %}
