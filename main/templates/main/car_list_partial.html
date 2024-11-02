@@ -1,0 +1,15 @@
+{% load static %}
+{% for item in cars %}
+<div class="card" style="width: 18rem;">
+    {% if item.image %}
+        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
+    {% else %}
+        <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ item.model }}</h5>
+        <p class="card-title">Цвет: {{ item.color }}</p>
+        <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+    </div>
+</div>
+{% endfor %}

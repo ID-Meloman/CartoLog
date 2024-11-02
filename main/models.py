@@ -19,7 +19,7 @@ class CarModel(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Марка автомобиля')
 
     def __str__(self):
-        return f'{self.brand} - {self.model_name}'
+        return f'{self.brand} - {self.name}'
 
     class Meta:
         verbose_name = 'Модель'
@@ -37,7 +37,7 @@ class TechnicalSpecs(models.Model):
     fuel_consumption_highway = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход по трассе')
     emissions_class = models.CharField(max_length=50, verbose_name='Экологический класс')
 
-    def str(self):
+    def __str__(self):
         return f'{self.name} - {self.engine_type} - {self.engine_capacity}'
 
     class Meta:
@@ -50,7 +50,7 @@ class TransmissionDrive(models.Model):
     gears_count = models.IntegerField(verbose_name='Количество передач')
     drive_type = models.CharField(max_length=20, verbose_name='Привод')
 
-    def str(self):
+    def __str__(self):
         return f'{self.transmission} - {self.gears_count}, {self.drive_type}'
 
     class Meta:
@@ -62,7 +62,7 @@ class SuspensionBrakes(models.Model):
     suspension_type = models.CharField(max_length=255, verbose_name='Тип подвески')
     brake_type = models.CharField(max_length=255, verbose_name='Тип тормозов')
 
-    def str(self):
+    def __str__(self):
         return f'{self.suspension_type}, {self.brake_type}'
 
     class Meta:
@@ -78,7 +78,7 @@ class SafetyFeatures(models.Model):
     blind_spot_monitoring = models.BooleanField(verbose_name='Мониторинг слепых зон')
     adaptive_cruise_control = models.BooleanField(verbose_name='Адаптивный круиз-контроль')
 
-    def str(self):
+    def __str__(self):
         return f'{self.airbags_count} Airbags, ABS: {self.abs}'
 
     class Meta:
@@ -95,7 +95,7 @@ class Comfort(models.Model):
     panoramic_roof = models.BooleanField(verbose_name='Панорамная крыша')
     electric_adjustments_seat = models.BooleanField(verbose_name='Электрическая регулировка сидений')
 
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -112,7 +112,7 @@ class MultimediaConnectivity(models.Model):
     wireless_communication = models.BooleanField(verbose_name='Беспроводная связь')
     usb_ports = models.IntegerField(verbose_name='USB порты')
 
-    def str(self):
+    def __str__(self):
         return f'{self.name}, {self.screen_size}'
 
     class Meta:
@@ -126,7 +126,7 @@ class AdditionalOptions(models.Model):
     remote_start = models.BooleanField(verbose_name='Дистанционный запуск')
     parking_assistance = models.BooleanField(verbose_name='Помощь при парковке')
 
-    def str(self):
+    def __str__(self):
         return f'Фаркоп:{self.tow_bar}, Пневмо:{self.adaptive_suspension}, Дист пуск:{self.remote_start}, Парк мод:{self.parking_assistance}'
 
     class Meta:
@@ -147,7 +147,7 @@ class Configuration(models.Model):
     additional_options = models.ForeignKey(AdditionalOptions, on_delete=models.CASCADE,
                                            verbose_name='Дополнительные опции')
 
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -171,8 +171,10 @@ class Car(models.Model):
     image_back = models.ImageField(upload_to='car_images/', verbose_name='Изображение сзади', blank=True, null=True)
     image_interior = models.ImageField(upload_to='car_images/', verbose_name='Изображение внутри', blank=True,
                                        null=True)
+    is_favorite = models.BooleanField(default=False, verbose_name='Избранный')
 
-    def str(self):
+
+    def __str__(self):
         return f'{self.model} - {self.configuration} - {self.color}'
 
     class Meta:
@@ -185,7 +187,7 @@ class Dealer(models.Model):
     legal_address = models.CharField(max_length=50, verbose_name='Юридический адрес')
     contact = models.CharField(max_length=15, verbose_name='Контакт автодиллера')
 
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -199,7 +201,7 @@ class Showroom(models.Model):
     contact = models.CharField(max_length=15, verbose_name='Контакт автосалона')
     dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE, verbose_name='Диллер')
 
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -212,7 +214,7 @@ class CarInShowroom(models.Model):
     showroom = models.ForeignKey(Showroom, on_delete=models.CASCADE, verbose_name='Автосалон')
     quantity = models.IntegerField(verbose_name='Количество в наличии')
 
-    def str(self):
+    def __str__(self):
         return f'{self.car} - {self.showroom} - {self.quantity}'
 
     class Meta:
