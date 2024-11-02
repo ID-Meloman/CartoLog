@@ -1,11 +1,11 @@
+import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, DeleteView, UpdateView
 
 from main.models import Car, CarModel, Brand  # Добавьте Brand здесь
-from .forms import NewCar, NewModel
-
+from .forms import NewModel
+from main.filters import CarFilter
 
 
 def favorites(request):
@@ -32,13 +32,11 @@ class CarDelete(DeleteView):
 
 
 def popular(request):
-    cars = Car.objects.order_by('-pk')
-    brands = Brand.objects.all()  # Получаем все марки автомобилей
-    return render(request, 'main/popular.html', {'cars': cars, 'brands': brands})
+    cars = Car.objects.all()
+    car_filter = CarFilter(request.GET, queryset=cars)  # Здесь передаем queryset
+    brands = Brand.objects.all()  # Если вам нужно получить список всех брендов
 
-
-
-
+    return render(request, 'main/popular.html', {'filter': car_filter, 'brands': brands, 'cars': cars})
 
 def form_newmodel(request):
     error = ''

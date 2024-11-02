@@ -14,6 +14,7 @@ urlpatterns = [
     path('<int:pk>/delete/', CarDelete.as_view(), name='car_delete'),  # Добавьте слэш в конце
     path('filter-cars/', filter_cars, name='filter_cars'),
     path('toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
+    path('popular/', popular, name='popular'),
 
 ]
 
