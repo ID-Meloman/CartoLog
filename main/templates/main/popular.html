@@ -1,6 +1,7 @@
 {% extends 'main/layout.html' %}
+
 {% load static %}
-{% block title %} CartoLog {% endblock %}
+{% block title %}CartoLog{% endblock %}
 
 {% block links %}
 <link rel="stylesheet" href="{% static 'main/css/popular.css' %}">
@@ -10,32 +11,37 @@
 
 {% block body %}
 {% include 'main/header.html' %}
-<h2> Do you wanna car? </h2>
 
-<div class="form-group">
-    <select id="brand-filter" class="form-control">
-        <option value="">Все марки</option>
-        {% for brand in brands %}
-            <option value="{{ brand.id }}">{{ brand.name }}</option>
-        {% endfor %}
-    </select>
+<h2>Do you wanna car?</h2>
+
+<div class="filter-container">
+    <div class="form-group">
+        <select id="brand-filter" class="form-control">
+            <option value="">Все марки</option>
+            {% for brand in brands %}
+                <option value="{{ brand.id }}">{{ brand.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <select id="model-filter" class="form-control" disabled>
+            <option value="">Выберите модель</option>
+            <!-- Модели будут загружены с помощью AJAX -->
+        </select>
+    </div>
+
+    <button id="reset-filters" class="btn btn-secondary">Сбросить фильтры</button>
 </div>
 
 <div class="card-container" id="car-list">
-    {% for item in cars %}
+    {% for item in filter.qs %}
     <div class="card position-relative" style="width: 18rem;">
         {% if item.image %}
             <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
         {% else %}
             <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
         {% endif %}
-
-        <!-- Сердечко для добавления в избранное -->
-        <button class="btn favorite-btn position-absolute top-0 end-0 m-2 {% if item.is_favorite %}favorite{% endif %}"
-                data-car-id="{{ item.id }}">
-            <i class="fas fa-heart {% if item.is_favorite %}text-danger{% endif %}"></i>
-        </button>
-
         <div class="card-body">
             <h5 class="card-title">{{ item.model }}</h5>
             <p class="card-title">Цвет: {{ item.color }}</p>
@@ -47,41 +53,57 @@
 
 <script>
 $(document).ready(function() {
+    // Фильтрация по марке
     $('#brand-filter').change(function() {
         var brandId = $(this).val();
+        $('#model-filter').prop('disabled', !brandId);
+
+        $.ajax({
+            url: '{% url "get_models_by_brand" %}',
+            data: {
+                'brand_id': brandId
+            },
+            success: function(data) {
+                $('#model-filter').empty();
+                $('#model-filter').append('<option value="">Выберите модель</option>');
+                $.each(data.models, function(index, model) {
+                    $('#model-filter').append('<option value="' + model.id + '">' + model.name + '</option>');
+                });
+            }
+        });
+
+        // Обновление списка автомобилей при выборе марки
+        updateCarList(brandId, $('#model-filter').val());
+    });
+
+    // Фильтрация по модели
+    $('#model-filter').change(function() {
+        updateCarList($('#brand-filter').val(), $(this).val());
+    });
+
+    // Сброс фильтров
+    $('#reset-filters').click(function() {
+        $('#brand-filter').val('');
+        $('#model-filter').empty().append('<option value="">Выберите модель</option>').prop('disabled', true);
+        updateCarList('', '');
+    });
+
+    // Функция для обновления списка автомобилей
+    function updateCarList(brandId, modelId) {
         $.ajax({
             url: '{% url "filter_cars" %}',
             data: {
-                'brand_id': brandId
+                'brand_id': brandId,
+                'model_id': modelId
             },
             success: function(data) {
                 $('#car-list').html(data);
             }
         });
-    });
-
-    // Обработчик для сердечка
-    $('.favorite-btn').click(function() {
-        var btn = $(this);
-        var carId = btn.data('car-id');
-
-        $.ajax({
-            url: '{% url "toggle_favorite" %}',
-            method: 'POST',
-            data: {
-                'car_id': carId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                if (response.is_favorite) {
-                    btn.find('i').addClass('text-danger');  // Изменяем цвет на красный
-                } else {
-                    btn.find('i').removeClass('text-danger'); // Возвращаем цвет черный
-                }
-            }
-        });
-    });
+    }
 });
 </script>
+
+
 
 {% endblock %}

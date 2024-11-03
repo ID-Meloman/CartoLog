@@ -1,11 +1,11 @@
+import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, DeleteView, UpdateView
 
 from main.models import Car, CarModel, Brand  # Добавьте Brand здесь
-from .forms import NewCar, NewModel
-
+from .forms import NewModel
+from main.filters import CarFilter
 
 
 def favorites(request):
@@ -32,13 +32,11 @@ class CarDelete(DeleteView):
 
 
 def popular(request):
-    cars = Car.objects.order_by('-pk')
-    brands = Brand.objects.all()  # Получаем все марки автомобилей
-    return render(request, 'main/popular.html', {'cars': cars, 'brands': brands})
+    cars = Car.objects.all()
+    car_filter = CarFilter(request.GET, queryset=cars)  # Здесь передаем queryset
+    brands = Brand.objects.all()  # Если вам нужно получить список всех брендов
 
-
-
-
+    return render(request, 'main/popular.html', {'filter': car_filter, 'brands': brands, 'cars': cars})
 
 def form_newmodel(request):
     error = ''
@@ -60,13 +58,15 @@ def form_newmodel(request):
 
 def filter_cars(request):
     brand_id = request.GET.get('brand_id')
+    model_id = request.GET.get('model_id')
     if brand_id:
         cars = Car.objects.filter(model__brand_id=brand_id)
+        if model_id:
+            cars = cars.filter(model_id=model_id)
     else:
         cars = Car.objects.all()
 
-    return render(request, 'main/car_list_partial.html', {'cars': cars})  # Убедитесь, что путь к частичному шаблону корректный
-
+    return render(request, 'main/car_list_partial.html', {'cars': cars})
 
 class CarDetail(DetailView):
     model = Car  # Измените CarModel на Car
@@ -90,3 +90,8 @@ def favorites_view(request):
     # Получаем все автомобили, добавленные в избранное
     favorites = Car.objects.filter(is_favorite=True)  # или используйте вашу логику получения избранных
     return render(request, 'main/favorites.html', {'favorites': favorites})
+
+def get_models_by_brand(request):
+    brand_id = request.GET.get('brand_id')
+    models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
+    return JsonResponse({'models': list(models)})
