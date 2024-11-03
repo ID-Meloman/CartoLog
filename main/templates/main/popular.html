@@ -11,15 +11,27 @@
 
 {% block body %}
 {% include 'main/header.html' %}
+
 <h2>Do you wanna car?</h2>
 
-<div class="form-group">
-    <select id="brand-filter" class="form-control">
-        <option value="">Все марки</option>
-        {% for brand in brands %}
-            <option value="{{ brand.id }}">{{ brand.name }}</option>
-        {% endfor %}
-    </select>
+<div class="filter-container">
+    <div class="form-group">
+        <select id="brand-filter" class="form-control">
+            <option value="">Все марки</option>
+            {% for brand in brands %}
+                <option value="{{ brand.id }}">{{ brand.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <select id="model-filter" class="form-control" disabled>
+            <option value="">Выберите модель</option>
+            <!-- Модели будут загружены с помощью AJAX -->
+        </select>
+    </div>
+
+    <button id="reset-filters" class="btn btn-secondary">Сбросить фильтры</button>
 </div>
 
 <div class="card-container" id="car-list">
@@ -41,20 +53,54 @@
 
 <script>
 $(document).ready(function() {
+    // Фильтрация по марке
     $('#brand-filter').change(function() {
         var brandId = $(this).val();
+        $('#model-filter').prop('disabled', !brandId);
+
+        $.ajax({
+            url: '{% url "get_models_by_brand" %}',
+            data: {
+                'brand_id': brandId
+            },
+            success: function(data) {
+                $('#model-filter').empty();
+                $('#model-filter').append('<option value="">Выберите модель</option>');
+                $.each(data.models, function(index, model) {
+                    $('#model-filter').append('<option value="' + model.id + '">' + model.name + '</option>');
+                });
+            }
+        });
+
+        // Обновление списка автомобилей при выборе марки
+        updateCarList(brandId, $('#model-filter').val());
+    });
+
+    // Фильтрация по модели
+    $('#model-filter').change(function() {
+        updateCarList($('#brand-filter').val(), $(this).val());
+    });
+
+    // Сброс фильтров
+    $('#reset-filters').click(function() {
+        $('#brand-filter').val('');
+        $('#model-filter').empty().append('<option value="">Выберите модель</option>').prop('disabled', true);
+        updateCarList('', '');
+    });
+
+    // Функция для обновления списка автомобилей
+    function updateCarList(brandId, modelId) {
         $.ajax({
             url: '{% url "filter_cars" %}',
             data: {
-                'brand_id': brandId
+                'brand_id': brandId,
+                'model_id': modelId
             },
             success: function(data) {
                 $('#car-list').html(data);
             }
         });
-    });
-
-
+    }
 });
 </script>
 

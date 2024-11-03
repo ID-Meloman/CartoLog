@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from . import views
-from .views import popular, form_newmodel, CarDetail, CarDelete, CarUpdate, filter_cars, favorites  # Импортируйте favorites
+from .views import popular, form_newmodel, CarDetail, CarDelete, CarUpdate, filter_cars, favorites, get_models_by_brand# Импортируйте favorites
 
 urlpatterns = [
     path('', popular, name='popular_page'),
@@ -15,6 +15,7 @@ urlpatterns = [
     path('filter-cars/', filter_cars, name='filter_cars'),
     path('toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
     path('popular/', popular, name='popular'),
+    path('get_models_by_brand/', get_models_by_brand, name='get_models_by_brand'),
 
 ]
 

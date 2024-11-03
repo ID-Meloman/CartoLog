@@ -58,12 +58,19 @@ def form_newmodel(request):
 
 def filter_cars(request):
     brand_id = request.GET.get('brand_id')
+    model_id = request.GET.get('model_id')
     if brand_id:
         cars = Car.objects.filter(model__brand_id=brand_id)
+        if model_id:
+            cars = cars.filter(model_id=model_id)
     else:
         cars = Car.objects.all()
 
-    return render(request, 'main/car_list_partial.html', {'cars': cars})  # Убедитесь, что путь к частичному шаблону корректный
+    return render(request, 'main/car_list_partial.html', {'cars': cars})
+def get_models_by_brand(request):
+    brand_id = request.GET.get('brand_id')
+    models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
+    return JsonResponse({'models': list(models)})
 
 
 class CarDetail(DetailView):

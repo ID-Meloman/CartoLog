@@ -120,3 +120,14 @@
 .favorite-btn .fa-heart.text-danger {
     color: red; /* Красный цвет, когда в избранном */
 }
+
+.filter-container {
+    display: flex;
+    gap: 10px; /* Расстояние между элементами */
+    justify-content: center; /* Выровнять элементы по центру */
+}
+
+.filter-container .form-group {
+    width: auto; /* Уменьшаем ширину до размеров контента */
+    flex: 1; /* Позволяет элементам занимать равное пространство */
+}
