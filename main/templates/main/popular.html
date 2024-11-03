@@ -30,8 +30,6 @@
             <!-- Модели будут загружены с помощью AJAX -->
         </select>
     </div>
-
-    <button id="reset-filters" class="btn btn-secondary">Сбросить фильтры</button>
 </div>
 
 <div class="card-container" id="car-list">
@@ -53,7 +51,6 @@
 
 <script>
 $(document).ready(function() {
-    // Фильтрация по марке
     $('#brand-filter').change(function() {
         var brandId = $(this).val();
         $('#model-filter').prop('disabled', !brandId);
@@ -71,25 +68,11 @@ $(document).ready(function() {
                 });
             }
         });
-
-        // Обновление списка автомобилей при выборе марки
-        updateCarList(brandId, $('#model-filter').val());
     });
 
-    // Фильтрация по модели
     $('#model-filter').change(function() {
-        updateCarList($('#brand-filter').val(), $(this).val());
-    });
-
-    // Сброс фильтров
-    $('#reset-filters').click(function() {
-        $('#brand-filter').val('');
-        $('#model-filter').empty().append('<option value="">Выберите модель</option>').prop('disabled', true);
-        updateCarList('', '');
-    });
-
-    // Функция для обновления списка автомобилей
-    function updateCarList(brandId, modelId) {
+        var modelId = $(this).val();
+        var brandId = $('#brand-filter').val();
         $.ajax({
             url: '{% url "filter_cars" %}',
             data: {
@@ -100,8 +83,10 @@ $(document).ready(function() {
                 $('#car-list').html(data);
             }
         });
-    }
+    });
 });
 </script>
+
+
 
 {% endblock %}

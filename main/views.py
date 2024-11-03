@@ -67,11 +67,6 @@ def filter_cars(request):
         cars = Car.objects.all()
 
     return render(request, 'main/car_list_partial.html', {'cars': cars})
-def get_models_by_brand(request):
-    brand_id = request.GET.get('brand_id')
-    models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
-    return JsonResponse({'models': list(models)})
-
 
 class CarDetail(DetailView):
     model = Car  # Измените CarModel на Car
@@ -95,3 +90,8 @@ def favorites_view(request):
     # Получаем все автомобили, добавленные в избранное
     favorites = Car.objects.filter(is_favorite=True)  # или используйте вашу логику получения избранных
     return render(request, 'main/favorites.html', {'favorites': favorites})
+
+def get_models_by_brand(request):
+    brand_id = request.GET.get('brand_id')
+    models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
+    return JsonResponse({'models': list(models)})
