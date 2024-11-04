@@ -33,6 +33,15 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+    <h2>Основные характеристики</h2>
+    <p><strong>Цвет:</strong> {{ car.color }}</p>
+    <!-- Другие характеристики -->
+    <button onclick="addToComparison({{ car.id }})">Добавить в сравнение</button>
+</div>
+
+
         <div class="col-md-6">
             <h2>Основные характеристики</h2>
             <p><strong>Цвет:</strong> {{ car.color }}</p>
@@ -132,6 +141,43 @@
         }
         document.getElementById('modalImage').src = images[currentIndex];
     }
+
+
+    function addToComparison(carId) {
+    fetch(`/add-to-comparison/${carId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'), // Функция для получения CSRF токена
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Автомобиль добавлен в сравнение!');
+        } else {
+            alert('Ошибка при добавлении автомобиля в сравнение.');
+        }
+    })
+    .catch(error => console.error('Ошибка:', error));
+}
+
+// Функция для получения CSRF токена из cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Проверка, начинается ли cookie с нужного имени
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 
 {% endblock %}
