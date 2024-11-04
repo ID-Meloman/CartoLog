@@ -1,12 +1,12 @@
-import django_filters
-from .models import Car, Brand, CarModel
+from django_filters import rest_framework as filters
+from .models import Car
 
-class CarFilter(django_filters.FilterSet):
-    model = django_filters.ModelChoiceFilter(queryset=CarModel.objects.all(), label='Модель')
+class CarFilter(filters.FilterSet):
+    drive_type = filters.CharFilter(field_name="configuration__transmission_drive__drive_type", lookup_expr="iexact")
+    transmission = filters.CharFilter(field_name="configuration__transmission_drive__transmission", lookup_expr="iexact")
+    horsepower_min = filters.NumberFilter(field_name="configuration__technical_specs__horsepower", lookup_expr="gte")
+    horsepower_max = filters.NumberFilter(field_name="configuration__technical_specs__horsepower", lookup_expr="lte")
 
     class Meta:
         model = Car
-        fields = {
-            'model__brand__name': ['exact'],  # Фильтрация по марке
-            'model': ['exact'],  # Фильтрация по модели
-        }
+        fields = ['drive_type', 'transmission', 'horsepower_min', 'horsepower_max']

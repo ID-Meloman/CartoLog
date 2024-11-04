@@ -12,31 +12,71 @@
 {% block body %}
 {% include 'main/header.html' %}
 
-<h2>Do you wanna car?</h2>
 
 <div class="filter-container">
-    <div class="form-group">
-        <select id="brand-filter" class="form-control">
-            <option value="">Все марки</option>
-            {% for brand in brands %}
-                <option value="{{ brand.id }}">{{ brand.name }}</option>
-            {% endfor %}
-        </select>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="brand-filter">Марка автомобиля:</label>
+            <select id="brand-filter" class="form-control">
+                <option value="">Все марки</option>
+                {% for brand in brands %}
+                    <option value="{{ brand.id }}">{{ brand.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="model-filter">Модель автомобиля:</label>
+            <select id="model-filter" class="form-control" disabled>
+                <option value="">Выберите модель</option>
+            </select>
+        </div>
     </div>
 
-    <div class="form-group">
-        <select id="model-filter" class="form-control" disabled>
-            <option value="">Выберите модель</option>
-            <!-- Модели будут загружены с помощью AJAX -->
-        </select>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="drive-type-filter">Тип привода:</label>
+            <select id="drive-type-filter" class="form-control">
+                <option value="">Выберите тип привода</option>
+                {% for drive_type in drive_types %}
+                    <option value="{{ drive_type }}">{{ drive_type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="transmission-filter">Коробка передач:</label>
+            <select id="transmission-filter" class="form-control">
+                <option value="">Выберите коробку передач</option>
+                {% for transmission in transmissions %}
+                    <option value="{{ transmission }}">{{ transmission }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
 
-    <button id="reset-filters" class="btn btn-secondary">Сбросить фильтры</button>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="horsepower-min">Мощность (л.с.): от:</label>
+            <input type="number" id="horsepower-min" class="form-control" placeholder="Минимальная мощность">
+        </div>
+
+        <div class="form-group">
+            <label for="horsepower-max">Мощность (л.с.): до:</label>
+            <input type="number" id="horsepower-max" class="form-control" placeholder="Максимальная мощность">
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button id="apply-filters" class="btn btn-primary">Применить фильтры</button>
+        <button id="reset-filters" class="btn btn-danger">Сбросить фильтры</button>
+    </div>
 </div>
+
 
 <div class="card-container" id="car-list">
     {% for item in filter.qs %}
-    <div class="card position-relative" style="width: 18rem;">
+    <div class="card">
         {% if item.image %}
             <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
         {% else %}
@@ -46,6 +86,9 @@
             <h5 class="card-title">{{ item.model }}</h5>
             <p class="card-title">Цвет: {{ item.color }}</p>
             <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+            <button class="favorite-btn" data-car-id="{{ item.id }}">
+                <i class="fas fa-heart {% if item.is_favorite %}text-danger{% endif %}"></i>
+            </button>
         </div>
     </div>
     {% endfor %}
@@ -60,9 +103,7 @@ $(document).ready(function() {
 
         $.ajax({
             url: '{% url "get_models_by_brand" %}',
-            data: {
-                'brand_id': brandId
-            },
+            data: { 'brand_id': brandId },
             success: function(data) {
                 $('#model-filter').empty();
                 $('#model-filter').append('<option value="">Выберите модель</option>');
@@ -73,37 +114,92 @@ $(document).ready(function() {
         });
 
         // Обновление списка автомобилей при выборе марки
-        updateCarList(brandId, $('#model-filter').val());
+        updateCarList(brandId, $('#model-filter').val(), $('#drive-type-filter').val(), $('#transmission-filter').val(), $('#horsepower-min').val(), $('#horsepower-max').val());
     });
 
     // Фильтрация по модели
     $('#model-filter').change(function() {
-        updateCarList($('#brand-filter').val(), $(this).val());
+        updateCarList($('#brand-filter').val(), $(this).val(), $('#drive-type-filter').val(), $('#transmission-filter').val(), $('#horsepower-min').val(), $('#horsepower-max').val());
+    });
+
+    // Фильтрация по типу привода
+    $('#drive-type-filter').change(function() {
+        updateCarList($('#brand-filter').val(), $('#model-filter').val(), $(this).val(), $('#transmission-filter').val(), $('#horsepower-min').val(), $('#horsepower-max').val());
+    });
+
+    // Фильтрация по коробке передач
+    $('#transmission-filter').change(function() {
+        updateCarList($('#brand-filter').val(), $('#model-filter').val(), $('#drive-type-filter').val(), $(this).val(), $('#horsepower-min').val(), $('#horsepower-max').val());
+    });
+
+    // Фильтрация по мощности
+    $('#horsepower-min, #horsepower-max').change(function() {
+        updateCarList($('#brand-filter').val(), $('#model-filter').val(), $('#drive-type-filter').val(), $('#transmission-filter').val(), $('#horsepower-min').val(), $('#horsepower-max').val());
     });
 
     // Сброс фильтров
     $('#reset-filters').click(function() {
         $('#brand-filter').val('');
         $('#model-filter').empty().append('<option value="">Выберите модель</option>').prop('disabled', true);
-        updateCarList('', '');
+        $('#drive-type-filter').val('');
+        $('#transmission-filter').val('');
+        $('#horsepower-min').val('');
+        $('#horsepower-max').val('');
+        updateCarList('', '', '', '', '', '');
+    });
+
+ // Обработчик применения фильтров
+    $('#apply-filters').click(function() {
+        updateCarList(
+            $('#brand-filter').val(),
+            $('#model-filter').val(),
+            $('#drive-type-filter').val(),
+            $('#transmission-filter').val(),
+            $('#horsepower-min').val(),
+            $('#horsepower-max').val()
+        );
     });
 
     // Функция для обновления списка автомобилей
-    function updateCarList(brandId, modelId) {
+    function updateCarList(brandId, modelId, driveType, transmission, horsepowerMin, horsepowerMax) {
         $.ajax({
             url: '{% url "filter_cars" %}',
             data: {
                 'brand_id': brandId,
-                'model_id': modelId
+                'model_id': modelId,
+                'drive_type': driveType,
+                'transmission': transmission,
+                'horsepower_min': horsepowerMin,
+                'horsepower_max': horsepowerMax
             },
             success: function(data) {
                 $('#car-list').html(data);
             }
         });
     }
+
+    // Обработчик добавления в избранное
+    $('.favorite-btn').click(function() {
+        var carId = $(this).data('car-id');
+        var $icon = $(this).find('i');
+
+        $.ajax({
+            url: '{% url "toggle_favorite" %}',
+            method: 'POST',
+            data: {
+                'car_id': carId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.is_favorite) {
+                    $icon.addClass('text-danger');
+                } else {
+                    $icon.removeClass('text-danger');
+                }
+            }
+        });
+    });
 });
 </script>
-
-
 
 {% endblock %}

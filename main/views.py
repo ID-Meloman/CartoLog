@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import DetailView, DeleteView, UpdateView
-from main.models import Car, CarModel, Brand, Person
+from main.models import Car, CarModel, Brand, Person, TransmissionDrive
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 
@@ -109,10 +109,18 @@ class CarDelete(DeleteView):
 
 def popular(request):
     cars = Car.objects.all()
-    car_filter = CarFilter(request.GET, queryset=cars)  # Здесь передаем queryset
-    brands = Brand.objects.all()  # Если вам нужно получить список всех брендов
+    car_filter = CarFilter(request.GET, queryset=cars)
+    brands = Brand.objects.all()
+    drive_types = TransmissionDrive.objects.values_list('drive_type', flat=True).distinct()
+    transmissions = TransmissionDrive.objects.values_list('transmission', flat=True).distinct()
 
-    return render(request, 'main/popular.html', {'filter': car_filter, 'brands': brands, 'cars': cars})
+    return render(request, 'main/popular.html', {
+        'filter': car_filter,
+        'brands': brands,
+        'drive_types': drive_types,
+        'transmissions': transmissions,
+        'cars': car_filter.qs
+    })
 
 
 def form_newmodel(request):
@@ -136,14 +144,28 @@ def form_newmodel(request):
 def filter_cars(request):
     brand_id = request.GET.get('brand_id')
     model_id = request.GET.get('model_id')
+    drive_type = request.GET.get('drive_type')
+    transmission = request.GET.get('transmission')
+    horsepower_min = request.GET.get('horsepower_min')
+    horsepower_max = request.GET.get('horsepower_max')
+
+    cars = Car.objects.all()
+
     if brand_id:
-        cars = Car.objects.filter(model__brand_id=brand_id)
-        if model_id:
-            cars = cars.filter(model_id=model_id)
-    else:
-        cars = Car.objects.all()
+        cars = cars.filter(model__brand_id=brand_id)
+    if model_id:
+        cars = cars.filter(model_id=model_id)
+    if drive_type:
+        cars = cars.filter(configuration__transmission_drive__drive_type=drive_type)
+    if transmission:
+        cars = cars.filter(configuration__transmission_drive__transmission=transmission)
+    if horsepower_min:
+        cars = cars.filter(configuration__technical_specs__horsepower__gte=horsepower_min)
+    if horsepower_max:
+        cars = cars.filter(configuration__technical_specs__horsepower__lte=horsepower_max)
 
     return render(request, 'main/car_list_partial.html', {'cars': cars})
+
 
 
 class CarDetail(DetailView):

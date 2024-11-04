@@ -20,6 +20,8 @@ urlpatterns = [
     path('registration/', registration_user_form, name='registration_user'),
     path('login/', login_user, name='login_user'),
     path('user/', info_user, name='info_user'),
+    path('get_models_by_brand/', get_models_by_brand, name='get_models_by_brand'),
+    path('filter-cars/', views.filter_cars, name='filter_cars'),
 
     path('logout/', views.logout_user, name='logout_user'),
 
