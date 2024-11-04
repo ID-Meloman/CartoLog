@@ -198,8 +198,6 @@ def get_models_by_brand(request):
     brand_id = request.GET.get('brand_id')
     models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
     return JsonResponse({'models': list(models)})
-
-
 def comparison_view(request):
     # Логика для получения данных для страницы сравнения
     return render(request, 'main/comparison.html')  # или другой шаблон

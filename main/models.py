@@ -225,7 +225,7 @@ class Person(models.Model):
     email = models.CharField(max_length=50, verbose_name='Почта пользователя')
     password = models.CharField(max_length=50, verbose_name='Пароль пользователя')
     favorite = models.ManyToManyField(Car, related_name='favorited_by', blank=True, verbose_name='Избранные автомобили')
-    compare = models.ManyToManyField(Car, related_name='compare_by', blank=True, verbose_name='Автомобили для сравнения')
+
 
     def __str__(self):
         return f'{self.name} - {self.email}'

@@ -25,7 +25,6 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout_user'),
     path('comparison/', comparison_view, name='comparison_page'),
 
-
 ]
 
 if settings.DEBUG:
