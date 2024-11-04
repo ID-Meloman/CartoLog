@@ -10,16 +10,26 @@
     <h1>{{ car.model }} - {{ car.configuration.name }}</h1>
     <div class="row">
         <div class="col-md-6">
-            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }} - Изображение">
+            <!-- Главное изображение -->
+            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }} - Изображение"
+                 data-bs-toggle="modal" data-bs-target="#imageModal"
+                 onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 0)">
             <div class="row mt-2">
+                <!-- Изображения автомобиля с модальным окном -->
                 <div class="col-md-4">
-                    <img src="{{ car.image_front.url }}" class="img-fluid" alt="Спереди">
+                    <img src="{{ car.image_front.url }}" class="img-fluid" alt="Спереди"
+                         data-bs-toggle="modal" data-bs-target="#imageModal"
+                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 1)">
                 </div>
                 <div class="col-md-4">
-                    <img src="{{ car.image_side.url }}" class="img-fluid" alt="Сбоку">
+                    <img src="{{ car.image_side.url }}" class="img-fluid" alt="Сбоку"
+                         data-bs-toggle="modal" data-bs-target="#imageModal"
+                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 2)">
                 </div>
                 <div class="col-md-4">
-                    <img src="{{ car.image_back.url }}" class="img-fluid" alt="Сзади">
+                    <img src="{{ car.image_back.url }}" class="img-fluid" alt="Сзади"
+                         data-bs-toggle="modal" data-bs-target="#imageModal"
+                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 3)">
                 </div>
             </div>
         </div>
@@ -84,5 +94,44 @@
     <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
     <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
 </div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;"> <!-- Ограничиваем максимальную ширину модального окна -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Увеличенное изображение</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center" style="position: relative;">
+                <button class="btn btn-light position-absolute start-0" onclick="changeImage(-1)">&#10094;</button>
+                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid" style="max-width: 110vw; max-height: 110vh;"> <!-- Ограничиваем ширину изображения -->
+                <button class="btn btn-light position-absolute end-0" onclick="changeImage(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let images = [];
+    let currentIndex = 0;
+
+    function setModalImage(mainImage, frontImage, sideImage, backImage, index) {
+        images = [mainImage, frontImage, sideImage, backImage];
+        currentIndex = index;
+        document.getElementById('modalImage').src = images[currentIndex];
+    }
+
+    function changeImage(direction) {
+        currentIndex += direction;
+        if (currentIndex < 0) {
+            currentIndex = images.length - 1; // Перейти к последнему изображению
+        } else if (currentIndex >= images.length) {
+            currentIndex = 0; // Перейти к первому изображению
+        }
+        document.getElementById('modalImage').src = images[currentIndex];
+    }
+</script>
 
 {% endblock %}
