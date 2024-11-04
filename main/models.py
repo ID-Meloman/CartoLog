@@ -225,43 +225,11 @@ class Person(models.Model):
     email = models.CharField(max_length=50, verbose_name='Почта пользователя')
     password = models.CharField(max_length=50, verbose_name='Пароль пользователя')
     favorite = models.ManyToManyField(Car, related_name='favorited_by', blank=True, verbose_name='Избранные автомобили')
-    compare = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='compare_set', verbose_name='Автомобили для сравнения', null=True, blank=True)
+    compare = models.ManyToManyField(Car, related_name='compare_by', blank=True, verbose_name='Автомобили для сравнения')
 
     def __str__(self):
         return f'{self.name} - {self.email}'
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-# class CarModel(models.Model):
-#     # Варианты для выбора вида двигателя
-#     ENGINE_TYPES = [
-#         ('gasoline', 'Бензин'),
-#         ('diesel', 'Дизель'),
-#         ('electric', 'Электро'),
-#         ('hybrid', 'Гибрид'),
-#     ]
-#
-#     # Варианты для выбора привода
-#     DRIVETRAINS = [
-#         ('fwd', 'Передний привод'),
-#         ('rwd', 'Задний привод'),
-#         ('awd', 'Полный привод'),
-#     ]
-#
-#     brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE, verbose_name='Марка')
-#     model_name = models.CharField(max_length=30, verbose_name='Модель')
-#     engine_type = models.CharField(max_length=10, choices=ENGINE_TYPES, verbose_name='Тип двигателя')
-#     drivetrain = models.CharField(max_length=3, choices=DRIVETRAINS, verbose_name='Тип привода')
-#     horsepower = models.IntegerField(verbose_name='Мощность в лошадиных силах')
-#     image = models.ImageField(upload_to='car_images/', verbose_name='Изображение', blank=True, null=True)
-#
-#
-#
-#     def __str__(self):
-#         return f'{self.brand} - {self.model_name}'
-#
-#     class Meta:
-#         verbose_name = 'Модель'
-#         verbose_name_plural = 'Модели'
 
