@@ -171,7 +171,6 @@ class Car(models.Model):
     image_back = models.ImageField(upload_to='car_images/', verbose_name='Изображение сзади', blank=True, null=True)
     image_interior = models.ImageField(upload_to='car_images/', verbose_name='Изображение внутри', blank=True,
                                        null=True)
-    is_favorite = models.BooleanField(default=False, verbose_name='Избранный')
 
 
     def __str__(self):
@@ -199,6 +198,7 @@ class Showroom(models.Model):
     name = models.CharField(max_length=30, verbose_name='Наименование автосалона')
     address = models.CharField(max_length=50, verbose_name='адрес')
     contact = models.CharField(max_length=15, verbose_name='Контакт автосалона')
+    website = models.CharField(max_length=50, verbose_name='Сайт автосалона')
     dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE, verbose_name='Диллер')
 
     def __str__(self):
@@ -219,6 +219,19 @@ class CarInShowroom(models.Model):
 
     class Meta:
         verbose_name = 'Машины в наличии'
+
+class Person(models.Model):
+    name = models.CharField(max_length=30, verbose_name='Имя пользователя')
+    email = models.CharField(max_length=50, verbose_name='Почта пользователя')
+    password = models.CharField(max_length=50, verbose_name='Пароль пользователя')
+    favorite = models.ManyToManyField(Car, related_name='favorited_by', blank=True, verbose_name='Избранные автомобили')
+    compare = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='compare_set', verbose_name='Автомобили для сравнения', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.name} - {self.email}'
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 # class CarModel(models.Model):
 #     # Варианты для выбора вида двигателя
@@ -252,17 +265,3 @@ class CarInShowroom(models.Model):
 #         verbose_name = 'Модель'
 #         verbose_name_plural = 'Модели'
 
-
-# class Car(models.Model):
-#     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Модель')
-#     quantity = models.PositiveIntegerField(verbose_name='Количество')
-#
-#     def __str__(self):
-#         return f'{self.car_model} - {self.quantity} шт'
-#
-#     def get_asolute_url(self):
-#         return f'cars/{self.pk}'
-#
-#     class Meta:
-#         verbose_name = 'Машина'
-#         verbose_name_plural = 'Машины'

@@ -2,14 +2,14 @@ from django.contrib import admin
 from .models import (
     Brand, CarModel, TechnicalSpecs, TransmissionDrive, SuspensionBrakes,
     SafetyFeatures, Comfort, MultimediaConnectivity, AdditionalOptions,
-    Configuration, Dealer, Showroom, CarInShowroom, Car
+    Configuration, Dealer, Showroom, CarInShowroom, Car, Person
 )
 
 # Register your models here.
 models = [
     Brand, CarModel, TechnicalSpecs, TransmissionDrive, SuspensionBrakes,
     SafetyFeatures, Comfort, MultimediaConnectivity, AdditionalOptions,
-    Configuration, Dealer, Showroom, CarInShowroom, Car
+    Configuration, Dealer, Showroom, CarInShowroom, Car, Person
 ]
 
 for model in models:

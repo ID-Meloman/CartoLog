@@ -12,54 +12,23 @@
 {% block body %}
 {% include 'main/header.html' %}
 
-<h2>Ваши избранные автомобили</h2>
-
-<div class="card-container" id="favorites-list">
-    {% for item in favorites %}
+<div class="card-container" id="car-list">
+    {% for car in favorite_cars %}
     <div class="card position-relative" style="width: 18rem;">
-        {% if item.image %}
-            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }}">
         {% else %}
             <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
         {% endif %}
-
-        <!-- Сердечко для удаления из избранного -->
-        <button class="btn favorite-btn position-absolute top-0 end-0 m-2 favorite"
-                data-car-id="{{ item.id }}">
-            <i class="fas fa-heart text-danger"></i>  <!-- Красное сердечко -->
-        </button>
-
         <div class="card-body">
-            <h5 class="card-title">{{ item.model }}</h5>
-            <p class="card-title">Цвет: {{ item.color }}</p>
-            <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+            <h5 class="card-title">{{ car.model }}</h5>
+            <p class="card-title">Цвет: {{ car.color }}</p>
+            <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">Подробнее</a>
         </div>
     </div>
     {% empty %}
-    <p>У вас нет избранных автомобилей.</p>
+    <p>У вас пока нет избранных автомобилей.</p>
     {% endfor %}
 </div>
-
-<script>
-$(document).ready(function() {
-    // Обработчик для сердечка
-    $('.favorite-btn').click(function() {
-        var btn = $(this);
-        var carId = btn.data('car-id');
-
-        $.ajax({
-            url: '{% url "toggle_favorite" %}',
-            method: 'POST',
-            data: {
-                'car_id': carId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                btn.closest('.card').remove(); // Удаляем карточку автомобиля из избранного
-            }
-        });
-    });
-});
-</script>
 
 {% endblock %}

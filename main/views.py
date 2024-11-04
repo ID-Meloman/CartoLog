@@ -1,22 +1,98 @@
-import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.views.generic import DetailView, DeleteView, UpdateView
-
-from main.models import Car, CarModel, Brand  # Добавьте Brand здесь
-from .forms import NewModel
+from main.models import Car, CarModel, Brand, Person
+from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 
 
-def favorites(request):
-    # Получаем избранные автомобили для отображения (предполагается, что у вас есть поле или метод для избранного)
-    favorite_cars = Car.objects.filter(is_favorite=True)  # Замените is_favorite на соответствующее поле
+def info_user(request):
+    # Проверяем, авторизован ли пользователь
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login_user')
 
-    context = {
-        'favorite_cars': favorite_cars
+    # Если пользователь авторизован, получаем его данные из базы
+    try:
+        user = Person.objects.get(id=user_id)
+    except Person.DoesNotExist:
+        # Если пользователь с таким ID не найден, удаляем данные из сессии и перенаправляем на login_user
+        request.session.flush()
+        messages.error(request, 'Сессия недействительна, пожалуйста, авторизуйтесь снова.')
+        return redirect('login_user')
+
+    # Передаём данные пользователя в шаблон info_user.html
+    return render(request, 'authorization/info_user.html', {'user': user})
+
+
+def logout_user(request):
+    # Удаляем данные пользователя из сессии
+    request.session.flush()
+
+    # Перенаправляем на страницу входа (или другую страницу по выбору)
+    return redirect('popular_page')
+
+
+def login_user(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            try:
+                # Ищем пользователя по email
+                user = Person.objects.get(email=email)
+
+                # Проверяем пароль
+                if user.password == password:
+                    # Сохраняем пользователя в сессии
+                    request.session['user_id'] = user.id
+                    request.session['user_name'] = user.name
+                    return redirect('popular_page')
+                else:
+                    messages.error(request, 'Неверный пароль')
+            except Person.DoesNotExist:
+                messages.error(request, 'Пользователь с такой почтой не найден')
+    else:
+        form = LoginForm()
+
+    return render(request, 'authorization/login_user.html', {'form': form})
+
+
+def registration_user_form(request):
+    error = ''
+    if request.method == 'POST':
+        form = NewPerson(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('popular_page')
+        else:
+            error = 'форма была заполенан не верно'
+    form = NewPerson()
+
+    data = {
+        'form': form,
+        'error': error
     }
+    return render(request, 'authorization/registration_user.html', data)
 
-    return render(request, 'favorites.html', context)
+
+def favorites(request):
+    # Проверяем, авторизован ли пользователь
+    user_id = request.session.get('user_id')
+    if not user_id:
+        # Если пользователь не авторизован, перенаправляем на страницу входа
+        messages.error(request, 'Пожалуйста, авторизуйтесь для доступа к избранному.')
+        return redirect('login_user')
+
+    # Получаем пользователя и его избранные автомобили
+    user = Person.objects.get(id=user_id)
+    favorite_cars = user.favorite.all()  # Получаем все избранные автомобили пользователя
+
+    # Передаем список избранных машин в шаблон
+    return render(request, 'main/favorites.html', {'favorite_cars': favorite_cars})
+
 
 class CarUpdate(UpdateView):
     model = CarModel
@@ -37,6 +113,7 @@ def popular(request):
     brands = Brand.objects.all()  # Если вам нужно получить список всех брендов
 
     return render(request, 'main/popular.html', {'filter': car_filter, 'brands': brands, 'cars': cars})
+
 
 def form_newmodel(request):
     error = ''
@@ -68,6 +145,7 @@ def filter_cars(request):
 
     return render(request, 'main/car_list_partial.html', {'cars': cars})
 
+
 class CarDetail(DetailView):
     model = Car  # Измените CarModel на Car
     template_name = 'main/car_detail.html'
@@ -86,10 +164,13 @@ def toggle_favorite(request):
 
         # Возвращаем ответ в формате JSON
         return JsonResponse({'is_favorite': car.is_favorite})
+
+
 def favorites_view(request):
     # Получаем все автомобили, добавленные в избранное
     favorites = Car.objects.filter(is_favorite=True)  # или используйте вашу логику получения избранных
     return render(request, 'main/favorites.html', {'favorites': favorites})
+
 
 def get_models_by_brand(request):
     brand_id = request.GET.get('brand_id')
