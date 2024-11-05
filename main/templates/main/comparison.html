@@ -17,7 +17,7 @@
                 {% for car in cars %}
                     <th>
                         <div class="car-info">
-                            <img src="{{ car.image.url }}" alt="Изображение автомобиля {{ car.model.brand }} {{ car.model.name }}" class="img-fluid" style="max-width: 100px; height: auto;">
+                            <img src="{{ car.image.url }}" alt="Изображение автомобиля {{ car.model.brand }} {{ car.model.name }}" class="img-fluid car-image-large">
                             <div>{{ car.model.brand }} {{ car.model.name }}</div>
                         </div>
                     </th>
@@ -209,18 +209,20 @@
     </table>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const rows = document.querySelectorAll('.comparison-container tbody tr');
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.comparison-container tbody tr');
 
-        // Получаем значения первой строки (для сравнения)
-        const firstCarValues = Array.from(rows).map(row => Array.from(row.cells).slice(1).map(cell => cell.innerText));
+    // Проверяем, есть ли больше одного автомобиля
+    if (rows.length > 0 && rows[0].cells.length > 2) {
+        // Получаем значения первой строки (начиная со второй ячейки для сравнения)
+        const carValues = Array.from(rows).map(row => Array.from(row.cells).slice(1).map(cell => cell.innerText));
 
-        for (let i = 1; i < firstCarValues[0].length; i++) {
-            let currentValue = firstCarValues[0][i];
+        for (let i = 0; i < carValues[0].length; i++) {
+            let currentValue = carValues[0][i];
             let isDifferent = false;
 
-            for (let j = 1; j < firstCarValues.length; j++) {
-                if (firstCarValues[j][i] !== currentValue) {
+            for (let j = 1; j < carValues.length; j++) {
+                if (carValues[j][i] !== currentValue) {
                     isDifferent = true;
                     break;
                 }
@@ -229,11 +231,13 @@
             // Если значение отличается, подсвечиваем столбец
             if (isDifferent) {
                 rows.forEach(row => {
-                    row.cells[i].classList.add('highlight');
+                    row.cells[i + 1].classList.add('highlight');
                 });
             }
         }
-    });
+    }
+});
+
 </script>
 
 {% endblock %}

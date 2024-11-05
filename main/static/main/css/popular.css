@@ -151,5 +151,16 @@
 }
 .highlight {
     background-color: lightgreen; /* Или любой другой цвет для подсветки */
-    font-weight: bold; /* Можно добавить жирный шрифт для выделения */
+}
+
+.car-image-large {
+    max-width: 200px; /* Увеличиваем ширину */
+    height: auto;
+}
+
+.table thead tr {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Фон строки, чтобы она перекрывала контент под ней */
+    z-index: 1;
 }
