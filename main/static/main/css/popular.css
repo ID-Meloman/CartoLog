@@ -149,6 +149,7 @@
 .table tr {
     line-height: 2; /* Увеличьте значение для большего расстояния между строками */
 }
-.highlight-difference {
-        background-color: #ffcccc; /* Бледно-красный цвет */
-    }
+.highlight {
+    background-color: lightgreen; /* Или любой другой цвет для подсветки */
+    font-weight: bold; /* Можно добавить жирный шрифт для выделения */
+}
