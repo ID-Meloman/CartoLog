@@ -1,9 +1,7 @@
-{% extends 'main/layout.html' %}
-
 {% load static %}
 
 {% block links %}
-<link rel="stylesheet" href="{% static 'main/css/popular.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/comparison.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -208,31 +206,30 @@
         </tbody>
     </table>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll('.comparison-container tbody tr');
 
     // Проверяем, есть ли больше одного автомобиля
     if (rows.length > 0 && rows[0].cells.length > 2) {
-        // Получаем значения первой строки (начиная со второй ячейки для сравнения)
-        const carValues = Array.from(rows).map(row => Array.from(row.cells).slice(1).map(cell => cell.innerText));
+        // Проходим по каждой строке
+        for (let i = 0; i < rows.length; i++) {
+            const rowCells = Array.from(rows[i].cells).slice(1); // Получаем все ячейки кроме первой (название характеристики)
+            let firstValue = rowCells[0].innerText;
+            let isDifferent = false; // Сбрасываем флаг для каждой строки
 
-        for (let i = 0; i < carValues[0].length; i++) {
-            let currentValue = carValues[0][i];
-            let isDifferent = false;
-
-            for (let j = 1; j < carValues.length; j++) {
-                if (carValues[j][i] !== currentValue) {
+            // Проверяем, отличаются ли значения в текущей строке
+            for (let j = 1; j < rowCells.length; j++) {
+                if (rowCells[j].innerText !== firstValue) {
                     isDifferent = true;
                     break;
                 }
             }
 
-            // Если значение отличается, подсвечиваем столбец
+            // Если есть различия, подсвечиваем все ячейки в текущей строке
             if (isDifferent) {
-                rows.forEach(row => {
-                    row.cells[i + 1].classList.add('highlight');
-                });
+                rowCells.forEach(cell => cell.classList.add('highlight'));
             }
         }
     }

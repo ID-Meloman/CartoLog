@@ -1,0 +1,33 @@
+
+.highlight {
+    background-color: #a0e3a0; /* Зеленая подсветка */
+}
+
+.table {
+    width: 100%;
+    text-align: center;
+    margin: 20px;
+}
+
+.table th, .table td {
+    padding: 15px; /* Увеличьте значение для большего расстояния */
+}
+.table tr {
+    line-height: 1; /* Увеличьте значение для большего расстояния между строками */
+}
+.highlight {
+    background-color: #f8d7da; /* Light red background for highlighting differences */
+}
+
+.car-image-large {
+    max-width: 200px; /* Увеличиваем ширину */
+    height: auto;
+}
+
+.table thead tr {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Фон строки, чтобы она перекрывала контент под ней */
+    z-index: 1;
+}
+
