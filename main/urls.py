@@ -15,7 +15,6 @@ urlpatterns = [
     path('<int:pk>/update/', CarUpdate.as_view(), name='car_update'),  # Добавьте слэш в конце
     path('<int:pk>/delete/', CarDelete.as_view(), name='car_delete'),  # Добавьте слэш в конце
     path('filter-cars/', filter_cars, name='filter_cars'),
-    path('toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
     path('popular/', popular, name='popular'),
     path('get_models_by_brand/', get_models_by_brand, name='get_models_by_brand'),
     path('registration/', registration_user_form, name='registration_user'),
@@ -24,8 +23,9 @@ urlpatterns = [
     path('get_models_by_brand/', get_models_by_brand, name='get_models_by_brand'),
     path('filter-cars/', views.filter_cars, name='filter_cars'),
     path('logout/', views.logout_user, name='logout_user'),
-    path('comparison/add/<int:car_id>/', toggle_comparison, name='toggle_comparison'),
     path('comparison/', comparison_view, name='comparison_view'),
+    path('toggle_comparison/<int:car_id>/', toggle_comparison, name='toggle_comparison'),
+    path('car/<int:car_id>/toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
 
 ]
 

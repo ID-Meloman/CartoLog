@@ -5,8 +5,6 @@
     <link rel="stylesheet" href="{% static 'main/css/comparison.css' %}">
 {% endblock %}
 
-
-
 {% block body %}
     {% include 'main/header.html' %}
 
@@ -15,7 +13,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Характеристика</th>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <th>
                             <div class="car-info text-center">
                                 <img src="{{ car.image.url }}" alt="Изображение автомобиля {{ car.model.brand }} {{ car.model.name }}" class="img-fluid car-image-large mb-2">
@@ -28,182 +26,181 @@
             <tbody>
                 <tr>
                     <td>Тип двигателя</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.engine_type %}{{ car.configuration.technical_specs.engine_type }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Объем двигателя</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.engine_capacity %}{{ car.configuration.technical_specs.engine_capacity }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Лошадиные силы</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.horsepower %}{{ car.configuration.technical_specs.horsepower }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Крутящий момент</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.torque %}{{ car.configuration.technical_specs.torque }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Расход по городу</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.fuel_consumption_city %}{{ car.configuration.technical_specs.fuel_consumption_city }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Расход по трассе</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.fuel_consumption_highway %}{{ car.configuration.technical_specs.fuel_consumption_highway }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Экологический класс</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.technical_specs.emissions_class %}{{ car.configuration.technical_specs.emissions_class }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Коробка передач</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.transmission_drive.transmission %}{{ car.configuration.transmission_drive.transmission }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Количество передач</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.transmission_drive.gears_count %}{{ car.configuration.transmission_drive.gears_count }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Тип привода</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.transmission_drive.drive_type %}{{ car.configuration.transmission_drive.drive_type }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Тип подвески</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.suspension_brakes.suspension_type %}{{ car.configuration.suspension_brakes.suspension_type }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Тип тормозов</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.suspension_brakes.brake_type %}{{ car.configuration.suspension_brakes.brake_type }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Количество подушек</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.airbags_count %}{{ car.configuration.safety_features.airbags_count }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Антиблокировочная система (ABS)</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.abs %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Контроль тяги</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.traction_control %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Помощь в удержании полосы</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.lane_assist %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Мониторинг слепых зон</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.blind_spot_monitoring %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Адаптивный круиз-контроль</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.safety_features.adaptive_cruise_control %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Название уровня комфорта</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.name %}{{ car.configuration.comfort.name }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Климат-контроль</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.climate_control %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Материал сидений</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.seat_material %}{{ car.configuration.comfort.seat_material }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Подогрев сидений</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.seat_heating %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Вентиляция сидений</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.seat_ventilation %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Панорамная крыша</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.panoramic_roof %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Электрическая регулировка сидений</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.comfort.electric_adjustments_seat %}Да{% else %}Нет{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Название мультимедиа</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.multimedia_connectivity.name %}{{ car.configuration.multimedia_connectivity.name }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Размер экрана</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.multimedia_connectivity.screen_size %}{{ car.configuration.multimedia_connectivity.screen_size }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Системы подключения</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.configuration.multimedia_connectivity.systems %}{{ car.configuration.multimedia_connectivity.systems }}{% else %}Не указано{% endif %}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Цена</td>
-                    {% for car in cars %}
+                    {% for car in comparisons %}
                         <td>{% if car.price %}{{ car.price }}{% else %}Не указана{% endif %}</td>
                     {% endfor %}
                 </tr>
             </tbody>
         </table>
     </div>
-
 
 {% block scripts %}
     <script src="{% static 'main/js/comparison.js' %}"></script>

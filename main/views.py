@@ -1,5 +1,4 @@
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import DetailView, DeleteView, UpdateView
@@ -95,6 +94,34 @@ def favorites(request):
     return render(request, 'main/favorites.html', {'favorite_cars': favorite_cars})
 
 
+def toggle_favorite(request, car_id):
+    # Проверяем, авторизован ли пользователь
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, 'Вы должны быть авторизованы для добавления в избранное.')
+        return redirect('login_user')
+
+    try:
+        # Находим пользователя и автомобиль
+        user = Person.objects.get(id=user_id)
+        car = Car.objects.get(id=car_id)
+
+        # Если автомобиль уже в избранном, убираем его
+        if car in user.favorite.all():
+            user.favorite.remove(car)
+        else:
+            # Если его нет в избранном, добавляем
+            user.favorite.add(car)
+
+    except Person.DoesNotExist:
+        messages.error(request, 'Пользователь не найден.')
+    except Car.DoesNotExist:
+        messages.error(request, 'Автомобиль не найден.')
+
+    return redirect('popular_page')  # Перенаправление на страницу со списком автомобилей
+
+
+
 class CarUpdate(UpdateView):
     model = CarModel
     template_name = 'main/newmodel.html'
@@ -115,12 +142,21 @@ def popular(request):
     drive_types = TransmissionDrive.objects.values_list('drive_type', flat=True).distinct()
     transmissions = TransmissionDrive.objects.values_list('transmission', flat=True).distinct()
 
+    # Получаем текущего пользователя и его избранные автомобили
+    user_id = request.session.get('user_id')
+    if user_id:
+        user = Person.objects.get(id=user_id)
+        favorite_cars = user.favorite.all()
+    else:
+        favorite_cars = []  # Если пользователь не авторизован, избранное пустое
+
     return render(request, 'main/popular.html', {
         'filter': car_filter,
         'brands': brands,
         'drive_types': drive_types,
         'transmissions': transmissions,
-        'cars': car_filter.qs
+        'cars': car_filter.qs,
+        'favorite_cars': favorite_cars,
     })
 
 
@@ -168,31 +204,10 @@ def filter_cars(request):
     return render(request, 'main/car_list_partial.html', {'cars': cars})
 
 
-
 class CarDetail(DetailView):
     model = Car  # Измените CarModel на Car
     template_name = 'main/car_detail.html'
     context_object_name = 'car'
-
-
-def toggle_favorite(request):
-    if request.method == 'POST':
-        car_id = request.POST.get('car_id')
-        # Находим автомобиль по ID, если не найден, возвращаем 404
-        car = get_object_or_404(Car, id=car_id)
-
-        # Переключаем состояние избранного
-        car.is_favorite = not car.is_favorite
-        car.save()
-
-        # Возвращаем ответ в формате JSON
-        return JsonResponse({'is_favorite': car.is_favorite})
-
-
-def favorites_view(request):
-    # Получаем все автомобили, добавленные в избранное
-    favorites = Car.objects.filter(is_favorite=True)  # или используйте вашу логику получения избранных
-    return render(request, 'main/favorites.html', {'favorites': favorites})
 
 
 def get_models_by_brand(request):
@@ -200,26 +215,38 @@ def get_models_by_brand(request):
     models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
     return JsonResponse({'models': list(models)})
 
-@login_required
-def toggle_comparison(request, car_id):
-    car = get_object_or_404(Car, id=car_id)
-    comparison, created = Comparison.objects.get_or_create(user=request.user, car=car)
 
-    if not created:
-        comparison.delete()
-
-    return redirect('car_detail', pk=car_id)
-
-@login_required
 def comparison_view(request):
-    # Получаем автомобили, добавленные к сравнению
-    compared_cars = Car.objects.filter(comparison__user=request.user)
+    # Проверяем, авторизован ли пользователь
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, 'Пожалуйста, авторизуйтесь для доступа к сравнению автомобилей.')
+        return redirect('login_user')
 
-    # Проверка, есть ли сравниваемые автомобили
-    if not compared_cars.exists():
-        messages.warning(request, "У вас нет автомобилей для сравнения.")
-        return redirect('some_view')  # Перенаправление на нужную страницу
+    # Получаем пользователя
+    user = get_object_or_404(Person, id=user_id)
 
-    return render(request, 'main/comparison.html', {'cars': compared_cars})
+    # Получаем все автомобили, добавленные в сравнение
+    comparisons = user.comparison.all()  # Получаем все автомобили для сравнения
+
+    # Передаем список автомобилей для сравнения в шаблон
+    return render(request, 'main/comparison.html', {'comparisons': comparisons})
 
 
+def toggle_comparison(request, car_id):
+    if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return HttpResponse(status=403)  # Возвращаем 403 Forbidden, если пользователь не авторизован
+
+        # Получаем объект автомобиля по ID
+        car = get_object_or_404(Car, id=car_id)
+        user = get_object_or_404(Person, id=user_id)
+
+        # Переключаем состояние сравнения
+        if car in user.comparison.all():
+            user.comparison.remove(car)
+        else:
+            user.comparison.add(car)
+
+        return HttpResponse(status=204)  # Возвращаем 204 No Content

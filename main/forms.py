@@ -1,4 +1,3 @@
-from django.db.models import Model
 from django.forms import ModelForm, TextInput, SelectMultiple, NumberInput, ClearableFileInput, Select
 from django import forms
 from .models import Car, CarModel, Person
@@ -56,6 +55,7 @@ class NewPerson(ModelForm):
             })
         }
 
+
 class LoginForm(forms.Form):
     email = forms.CharField(
         max_length=50,
@@ -67,3 +67,6 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}),
         label="Пароль"
     )
+
+
+

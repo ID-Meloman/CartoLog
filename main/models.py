@@ -226,13 +226,15 @@ class Person(models.Model):
     email = models.CharField(max_length=50, verbose_name='Почта пользователя')
     password = models.CharField(max_length=50, verbose_name='Пароль пользователя')
     favorite = models.ManyToManyField(Car, related_name='favorited_by', blank=True, verbose_name='Избранные автомобили')
-
+    comparison = models.ManyToManyField(Car, related_name='compared_by', blank=True, verbose_name='Сравниваемые автомобили')
 
     def __str__(self):
         return f'{self.name} - {self.email}'
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
 
 class Comparison(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

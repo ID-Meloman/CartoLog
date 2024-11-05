@@ -40,13 +40,9 @@
     <!-- Другие характеристики -->
     <form action="{% url 'toggle_comparison' car.id %}" method="post">
     {% csrf_token %}
-    <button type="submit" class="btn {% if car in user.comparison_set.all %}btn-danger{% else %}btn-primary{% endif %}">
-        {% if car in user.comparison_set.all %}
-            Убрать из сравнения
-        {% else %}
-            Добавить к сравнению
-        {% endif %}
-    </button>
+    <button class="compare-btn" data-car-id="{{ item.id }}">
+    <i class="fas fa-exchange-alt {% if item in request.user.comparison.all %}text-success{% endif %}"></i>
+</button>
 </form>
 
 </div>
@@ -153,41 +149,35 @@
     }
 
 
-    function addToComparison(carId) {
-    fetch(`/add-to-comparison/${carId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'), // Функция для получения CSRF токена
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Автомобиль добавлен в сравнение!');
-        } else {
-            alert('Ошибка при добавлении автомобиля в сравнение.');
-        }
-    })
-    .catch(error => console.error('Ошибка:', error));
-}
+  $(document).ready(function() {
+    // Обработчик добавления в сравнение
+    $('.compare-btn').click(function(event) {
+        event.preventDefault(); // Отменяем стандартное поведение кнопки
 
-// Функция для получения CSRF токена из cookies
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Проверка, начинается ли cookie с нужного имени
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        var carId = $(this).data('car-id');
+        var $icon = $(this).find('i');
+
+        $.ajax({
+            url: '{% url "toggle_comparison" car_id=0 %}'.replace('0', carId),
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                // Здесь можно добавить любой код, который должен выполняться после успешного запроса
+                // Например, можно отображать всплывающее сообщение
+                $icon.toggleClass('text-success'); // Переключаем класс иконки
+                alert('Статус сравнения обновлен!'); // Сообщение о успешном обновлении
+            },
+            error: function(xhr) {
+                // Обработка ошибок
+                if (xhr.status === 403) {
+                    alert('Вы не авторизованы для выполнения этого действия.');
+                }
             }
-        }
-    }
-    return cookieValue;
-}
+        });
+    });
+});
 </script>
 
 {% endblock %}
