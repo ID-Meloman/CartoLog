@@ -38,7 +38,16 @@
     <h2>Основные характеристики</h2>
     <p><strong>Цвет:</strong> {{ car.color }}</p>
     <!-- Другие характеристики -->
-    <button onclick="addToComparison({{ car.id }})">Добавить в сравнение</button>
+    <form action="{% url 'toggle_comparison' car.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">
+        {% if car in user.comparison_set.all %}
+            Убрать из сравнения
+        {% else %}
+            Добавить к сравнению
+        {% endif %}
+    </button>
+</form>
 </div>
 
 

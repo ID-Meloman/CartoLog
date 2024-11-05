@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 # Таблица марок
@@ -233,3 +234,11 @@ class Person(models.Model):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+class Comparison(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'car')
+        verbose_name = 'Сравнение'
+        verbose_name_plural = 'Сравнения'

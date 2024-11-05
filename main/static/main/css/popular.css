@@ -137,3 +137,18 @@
     background-color: #a0e3a0; /* Зеленая подсветка */
 }
 
+.table {
+    width: 100%;
+    text-align: center;
+    margin: 20px;
+}
+
+.table th, .table td {
+    padding: 15px; /* Увеличьте значение для большего расстояния */
+}
+.table tr {
+    line-height: 2; /* Увеличьте значение для большего расстояния между строками */
+}
+.highlight-difference {
+        background-color: #ffcccc; /* Бледно-красный цвет */
+    }

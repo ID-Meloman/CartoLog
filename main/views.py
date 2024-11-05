@@ -1,8 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import DetailView, DeleteView, UpdateView
-from main.models import Car, CarModel, Brand, Person, TransmissionDrive
+from main.models import Car, CarModel, Brand, Person, TransmissionDrive, Comparison
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 
@@ -198,6 +199,25 @@ def get_models_by_brand(request):
     brand_id = request.GET.get('brand_id')
     models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
     return JsonResponse({'models': list(models)})
+
+@login_required
+def toggle_comparison(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    comparison, created = Comparison.objects.get_or_create(user=request.user, car=car)
+
+    if not created:
+        comparison.delete()
+
+    return redirect('car_detail', pk=car_id)
+
+@login_required
 def comparison_view(request):
-    # Логика для получения данных для страницы сравнения
-    return render(request, 'main/comparison.html')  # или другой шаблон
+    # Получаем автомобили, добавленные к сравнению
+    compared_cars = Car.objects.filter(comparison__user=request.user)
+
+    # Проверка, есть ли сравниваемые автомобили
+    if not compared_cars.exists():
+        messages.warning(request, "У вас нет автомобилей для сравнения.")
+        return redirect('some_view')  # Перенаправление на нужную страницу
+
+    return render(request, 'main/comparison.html', {'cars': compared_cars})
