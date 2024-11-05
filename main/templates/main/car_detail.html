@@ -40,7 +40,7 @@
     <!-- Другие характеристики -->
     <form action="{% url 'toggle_comparison' car.id %}" method="post">
     {% csrf_token %}
-    <button type="submit">
+    <button type="submit" class="btn {% if car in user.comparison_set.all %}btn-danger{% else %}btn-primary{% endif %}">
         {% if car in user.comparison_set.all %}
             Убрать из сравнения
         {% else %}
@@ -48,6 +48,7 @@
         {% endif %}
     </button>
 </form>
+
 </div>
 
 
