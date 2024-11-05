@@ -221,3 +221,5 @@ def comparison_view(request):
         return redirect('some_view')  # Перенаправление на нужную страницу
 
     return render(request, 'main/comparison.html', {'cars': compared_cars})
+
+
