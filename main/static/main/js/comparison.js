@@ -1,37 +1,20 @@
-function toggleComparison(carId) {
-    var form = document.getElementById('comparison-form-' + carId);
-    var button = form.querySelector('button');
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.comparison-container tbody tr');
+    rows.forEach(row => {
+        const rowCells = Array.from(row.cells).slice(1); // исключаем первую ячейку (название характеристики)
+        let firstValue = rowCells[0].innerText.trim(); // удаляем пробелы
+        let isDifferent = false;
 
-    // Получаем текущее состояние из data атрибута
-    var isInComparison = button.getAttribute('data-in-comparison') === 'true';
-
-    // Отправка формы
-    fetch(form.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
-        },
-        body: new FormData(form)
-    })
-    .then(response => response.json())  // Ожидаем JSON-ответ
-    .then(data => {
-        if (data.is_in_comparison !== undefined) {
-            // Обновляем класс и текст кнопки в зависимости от состояния
-            if (data.is_in_comparison) {
-                button.classList.remove('btn-success');
-                button.classList.add('btn-danger');
-                button.innerHTML = '<i class="fas fa-times"></i> Удалить из сравнения';
-            } else {
-                button.classList.remove('btn-danger');
-                button.classList.add('btn-success');
-                button.innerHTML = '<i class="fas fa-plus"></i> Добавить к сравнению';
+        // Проверяем, если хотя бы одно значение отличается от первого
+        rowCells.forEach(cell => {
+            if (cell.innerText.trim() !== firstValue) { // удаляем пробелы и сравниваем
+                isDifferent = true;
             }
+        });
 
-            // Обновляем data атрибут с состоянием
-            button.setAttribute('data-in-comparison', data.is_in_comparison.toString());
+        // Если различия найдены, добавляем класс для всех ячеек строки
+        if (isDifferent) {
+            rowCells.forEach(cell => cell.classList.add('highlight'));
         }
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
     });
-}
+});
