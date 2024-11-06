@@ -240,6 +240,7 @@ def toggle_comparison(request, car_id):
         if not user_id:
             return JsonResponse({'error': 'Вы должны быть авторизованы'}, status=403)
 
+    try:
         car = get_object_or_404(Car, id=car_id)
         user = get_object_or_404(Person, id=user_id)
 
@@ -251,4 +252,5 @@ def toggle_comparison(request, car_id):
             user.comparison.add(car)
 
         return JsonResponse({'is_in_comparison': not is_in_comparison})  # Возвращаем новое состояние
-    return JsonResponse(status=405)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
