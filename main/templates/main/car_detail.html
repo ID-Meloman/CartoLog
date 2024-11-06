@@ -40,10 +40,18 @@
     <!-- Другие характеристики -->
     <form action="{% url 'toggle_comparison' car.id %}" method="post">
     {% csrf_token %}
-    <button class="compare-btn" data-car-id="{{ item.id }}">
-    <i class="fas fa-exchange-alt {% if item in request.user.comparison.all %}text-success{% endif %}"></i>
-</button>
+    <button type="submit"
+            class="btn {% if car in request.user.comparison.all %}btn-danger{% else %}btn-success{% endif %} compare-btn"
+            data-car-id="{{ car.id }}">
+        {% if car in request.user.comparison.all %}
+            <i class="fas fa-times"></i> Удалить из сравнения
+        {% else %}
+            <i class="fas fa-plus"></i> Добавить к сравнению
+        {% endif %}
+    </button>
 </form>
+
+
 
 </div>
 
@@ -149,13 +157,12 @@
     }
 
 
-  $(document).ready(function() {
-    // Обработчик добавления в сравнение
+$(document).ready(function() {
     $('.compare-btn').click(function(event) {
         event.preventDefault(); // Отменяем стандартное поведение кнопки
 
         var carId = $(this).data('car-id');
-        var $icon = $(this).find('i');
+        var $button = $(this);
 
         $.ajax({
             url: '{% url "toggle_comparison" car_id=0 %}'.replace('0', carId),
@@ -164,13 +171,14 @@
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             success: function() {
-                // Здесь можно добавить любой код, который должен выполняться после успешного запроса
-                // Например, можно отображать всплывающее сообщение
-                $icon.toggleClass('text-success'); // Переключаем класс иконки
-                alert('Статус сравнения обновлен!'); // Сообщение о успешном обновлении
+                // Переключаем класс и текст кнопки после успешного запроса
+                if ($button.hasClass('btn-primary')) {
+                    $button.removeClass('btn-primary').addClass('btn-danger').html('<i class="fas fa-times"></i> Удалить из сравнения');
+                } else {
+                    $button.removeClass('btn-danger').addClass('btn-primary').html('<i class="fas fa-plus"></i> Добавить к сравнению');
+                }
             },
             error: function(xhr) {
-                // Обработка ошибок
                 if (xhr.status === 403) {
                     alert('Вы не авторизованы для выполнения этого действия.');
                 }
@@ -178,6 +186,41 @@
         });
     });
 });
+
+
+$(document).ready(function() {
+    // Обработчик клика по кнопке сравнения
+    $('.compare-btn').click(function(event) {
+        event.preventDefault(); // Отменяем стандартное поведение кнопки
+
+        var carId = $(this).data('car-id');
+        var $button = $(this);
+
+        $.ajax({
+            url: '{% url "toggle_comparison" car_id=0 %}'.replace('0', carId),
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                // Переключаем класс и текст кнопки после успешного запроса
+                if ($button.hasClass('btn-success')) {
+                    $button.removeClass('btn-success').addClass('btn-danger').html('<i class="fas fa-times"></i> Удалить из сравнения');
+                } else {
+                    $button.removeClass('btn-danger').addClass('btn-success').html('<i class="fas fa-plus"></i> Добавить к сравнению');
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 403) {
+                    alert('Вы не авторизованы для выполнения этого действия.');
+                }
+            }
+        });
+    });
+});
+
+
+
 </script>
 
 {% endblock %}
