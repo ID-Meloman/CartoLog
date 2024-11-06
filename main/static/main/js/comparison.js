@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Если различия найдены, добавляем класс для всех ячеек строки
+        // Если различия найдены, добавляем класс Bootstrap для всех ячеек строки
         if (isDifferent) {
-            rowCells.forEach(cell => cell.classList.add('highlight'));
+            rowCells.forEach(cell => cell.classList.add('table-warning')); // используем класс Bootstrap
         }
     });
 });
