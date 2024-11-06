@@ -45,6 +45,7 @@
         type="button"
         class="btn {% if car in request.user.comparison.all %}btn-danger{% else %}btn-success{% endif %} compare-btn"
         data-car-id="{{ car.id }}"
+        data-in-comparison="{% if car in request.user.comparison.all %}true{% else %}false{% endif %}"
         onclick="toggleComparison({{ car.id }})">
         {% if car in request.user.comparison.all %}
             <i class="fas fa-times"></i> Удалить из сравнения

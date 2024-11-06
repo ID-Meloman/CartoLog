@@ -22,6 +22,9 @@ function toggleComparison(carId) {
     var form = document.getElementById('comparison-form-' + carId);
     var button = form.querySelector('button');
 
+    // Получаем текущее состояние из data атрибута
+    var isInComparison = button.getAttribute('data-in-comparison') === 'true';
+
     // Отправка формы
     fetch(form.action, {
         method: 'POST',
@@ -43,6 +46,9 @@ function toggleComparison(carId) {
                 button.classList.add('btn-success');
                 button.innerHTML = '<i class="fas fa-plus"></i> Добавить к сравнению';
             }
+
+            // Обновляем data атрибут с состоянием
+            button.setAttribute('data-in-comparison', data.is_in_comparison.toString());
         }
     })
     .catch(error => {
