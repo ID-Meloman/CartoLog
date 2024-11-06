@@ -238,16 +238,17 @@ def toggle_comparison(request, car_id):
     if request.method == 'POST':
         user_id = request.session.get('user_id')
         if not user_id:
-            return HttpResponse(status=403)  # Возвращаем 403 Forbidden, если пользователь не авторизован
+            return JsonResponse({'error': 'Вы должны быть авторизованы'}, status=403)
 
-        # Получаем объект автомобиля по ID
         car = get_object_or_404(Car, id=car_id)
         user = get_object_or_404(Person, id=user_id)
 
         # Переключаем состояние сравнения
-        if car in user.comparison.all():
+        is_in_comparison = car in user.comparison.all()
+        if is_in_comparison:
             user.comparison.remove(car)
         else:
             user.comparison.add(car)
 
-        return HttpResponse(status=204)  # Возвращаем 204 No Content
+        return JsonResponse({'is_in_comparison': not is_in_comparison})  # Возвращаем новое состояние
+    return JsonResponse(status=405)
