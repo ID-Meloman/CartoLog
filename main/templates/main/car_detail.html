@@ -43,28 +43,31 @@
                 {% csrf_token %}
                 <button
                         type="button"
-                        class="btn {% if car in request.user.comparison.all %}btn-danger{% else %}btn-success{% endif %} compare-btn"
+                        class="btn {% if car in comparison_cars %}btn-danger{% else %}btn-success{% endif %} compare-btn"
                         data-car-id="{{ car.id }}"
-                        data-in-comparison="{% if car in request.user.comparison.all %}true{% else %}false{% endif %}"
+                        data-in-comparison="{% if car in comparison_cars %}true{% else %}false{% endif %}"
                         onclick="toggleComparison({{ car.id }})">
-                    {% if car in request.user.comparison.all %}
+                    {% if car in comparison_cars %}
                     <i class="fas fa-times"></i> Удалить из сравнения
                     {% else %}
                     <i class="fas fa-plus"></i> Добавить к сравнению
                     {% endif %}
                 </button>
-
             </form>
-            <button
-                    class="btn btn-warning favorite-toggle"
-                    data-car-id="{{ car.id }}"
-                    data-url="{% url 'toggle_favorite' car.id %}">
-                {% if car in favorite_cars %}
-                Убрать из избранного
-                {% else %}
-                Добавить в избранное
-                {% endif %}
-            </button>
+
+            <form method="POST" action="{% url 'toggle_favorite' car.id %}">
+                {% csrf_token %}
+                <button
+                        class="btn btn-warning favorite-toggle"
+                        data-car-id="{{ car.id }}"
+                        data-url="{% url 'toggle_favorite' car.id %}">
+                    {% if car in favorite_cars %}
+                    Убрать из избранного
+                    {% else %}
+                    Добавить в избранное
+                    {% endif %}
+                </button>
+            </form>
 
         </div>
 
