@@ -35,28 +35,38 @@
         </div>
 
         <div class="col-md-6">
-    <h2>Основные характеристики</h2>
-    <p><strong>Цвет:</strong> {{ car.color }}</p>
-    <!-- Другие характеристики -->
+            <h2>Основные характеристики</h2>
+            <p><strong>Цвет:</strong> {{ car.color }}</p>
+            <!-- Другие характеристики -->
 
-<form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
-    {% csrf_token %}
-    <button
-        type="button"
-        class="btn {% if car in request.user.comparison.all %}btn-danger{% else %}btn-success{% endif %} compare-btn"
-        data-car-id="{{ car.id }}"
-        data-in-comparison="{% if car in request.user.comparison.all %}true{% else %}false{% endif %}"
-        onclick="toggleComparison({{ car.id }})">
-        {% if car in request.user.comparison.all %}
-            <i class="fas fa-times"></i> Удалить из сравнения
-        {% else %}
-            <i class="fas fa-plus"></i> Добавить к сравнению
-        {% endif %}
-    </button>
-</form>
+            <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
+                {% csrf_token %}
+                <button
+                        type="button"
+                        class="btn {% if car in request.user.comparison.all %}btn-danger{% else %}btn-success{% endif %} compare-btn"
+                        data-car-id="{{ car.id }}"
+                        data-in-comparison="{% if car in request.user.comparison.all %}true{% else %}false{% endif %}"
+                        onclick="toggleComparison({{ car.id }})">
+                    {% if car in request.user.comparison.all %}
+                    <i class="fas fa-times"></i> Удалить из сравнения
+                    {% else %}
+                    <i class="fas fa-plus"></i> Добавить к сравнению
+                    {% endif %}
+                </button>
 
+            </form>
+            <button
+                    class="btn btn-warning favorite-toggle"
+                    data-car-id="{{ car.id }}"
+                    data-url="{% url 'toggle_favorite' car.id %}">
+                {% if car in favorite_cars %}
+                Убрать из избранного
+                {% else %}
+                Добавить в избранное
+                {% endif %}
+            </button>
 
-</div>
+        </div>
 
 
         <div class="col-md-6">
@@ -92,9 +102,12 @@
     <p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
     <p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
     <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
-    <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</p>
-    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</p>
-    <p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+    <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}
+    </p>
+    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет"
+        }}</p>
+    <p><strong>Адаптивный круиз-контроль:</strong> {{
+        car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
 
     <h2>Комфорт</h2>
     <p><strong>Название уровня комфорта:</strong> {{ car.configuration.comfort.name }}</p>
@@ -103,27 +116,33 @@
     <p><strong>Подогрев сидений:</strong> {{ car.configuration.comfort.seat_heating|yesno:"Да,Нет" }}</p>
     <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
     <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
-    <p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+    <p><strong>Электрическая регулировка сидений:</strong> {{
+        car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
 
     <h2>Мультимедиа</h2>
     <p><strong>Название мультимедиа:</strong> {{ car.configuration.multimedia_connectivity.name }}</p>
-    <p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
+    <p><strong>Мультимедиа система:</strong> {{
+        car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
     <p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
     <p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
     <p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
-    <p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
+    <p><strong>Беспроводная связь:</strong> {{
+        car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
     <p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
 
     <h2>Дополнительные опции</h2>
     <p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
-    <p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}</p>
+    <p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}
+    </p>
     <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
-    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
+    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет"
+        }}</p>
 </div>
 
 <!-- Модальное окно -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;"> <!-- Ограничиваем максимальную ширину модального окна -->
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
+        <!-- Ограничиваем максимальную ширину модального окна -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="imageModalLabel">Увеличенное изображение</h5>
@@ -131,7 +150,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center align-items-center" style="position: relative;">
                 <button class="btn btn-light position-absolute start-0" onclick="changeImage(-1)">&#10094;</button>
-                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid" style="max-width: 110vw; max-height: 110vh;"> <!-- Ограничиваем ширину изображения -->
+                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid"
+                     style="max-width: 110vw; max-height: 110vh;"> <!-- Ограничиваем ширину изображения -->
                 <button class="btn btn-light position-absolute end-0" onclick="changeImage(1)">&#10095;</button>
             </div>
         </div>
@@ -139,6 +159,36 @@
 </div>
 
 
- <script src="{% static 'main/js/car_detail.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'main/js/car_detail.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('.favorite-toggle').click(function(e) {
+            e.preventDefault(); // предотвращаем перезагрузку страницы
+            const button = $(this);
+            const carId = button.data('car-id');
+            const url = button.data('url');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.is_favorite) {
+                        button.text('Убрать из избранного');
+                    } else {
+                        button.text('Добавить в избранное');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert(xhr.responseJSON.error || 'Ошибка при обработке запроса');
+                }
+            });
+        });
+    });
+</script>
+
 
 {% endblock %}

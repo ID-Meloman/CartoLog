@@ -96,30 +96,29 @@ def favorites(request):
 
 
 def toggle_favorite(request, car_id):
-    # Проверяем, авторизован ли пользователь
     user_id = request.session.get('user_id')
     if not user_id:
-        messages.error(request, 'Вы должны быть авторизованы для добавления в избранное.')
-        return redirect('login_user')
+        return JsonResponse({'error': 'Вы должны быть авторизованы для добавления в избранное.'}, status=403)
 
     try:
         # Находим пользователя и автомобиль
         user = Person.objects.get(id=user_id)
         car = Car.objects.get(id=car_id)
 
-        # Если автомобиль уже в избранном, убираем его
+        # Определяем действие: добавляем или убираем из избранного
         if car in user.favorite.all():
             user.favorite.remove(car)
+            is_favorite = False
         else:
-            # Если его нет в избранном, добавляем
             user.favorite.add(car)
+            is_favorite = True
+
+        return JsonResponse({'is_favorite': is_favorite})
 
     except Person.DoesNotExist:
-        messages.error(request, 'Пользователь не найден.')
+        return JsonResponse({'error': 'Пользователь не найден.'}, status=404)
     except Car.DoesNotExist:
-        messages.error(request, 'Автомобиль не найден.')
-
-    return redirect('popular_page')  # Перенаправление на страницу со списком автомобилей
+        return JsonResponse({'error': 'Автомобиль не найден.'}, status=404)
 
 
 
