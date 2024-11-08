@@ -1,21 +1,32 @@
-  let images = [];
-    let currentIndex = 0;
+let images = [];
+let currentIndex = 0;
 
-    function setModalImage(mainImage, frontImage, sideImage, backImage, index) {
-        images = [mainImage, frontImage, sideImage, backImage];
-        currentIndex = index;
-        document.getElementById('modalImage').src = images[currentIndex];
-    }
+function setModalImage(mainImage, frontImage, sideImage, backImage, index) {
+    images = [mainImage, frontImage, sideImage, backImage];
+    currentIndex = index;
+    const modalImage = document.getElementById('modalImage');
 
-    function changeImage(direction) {
-        currentIndex += direction;
-        if (currentIndex < 0) {
-            currentIndex = images.length - 1; // Перейти к последнему изображению
-        } else if (currentIndex >= images.length) {
-            currentIndex = 0; // Перейти к первому изображению
-        }
-        document.getElementById('modalImage').src = images[currentIndex];
+    // Устанавливаем источник изображения
+    modalImage.src = images[currentIndex];
+
+    // После загрузки изображения, устанавливаем фиксированный размер
+    modalImage.onload = function() {
+        modalImage.style.width = '800px';  // Фиксированная ширина
+        modalImage.style.height = '600px'; // Фиксированная высота
+    };
+}
+
+function changeImage(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) {
+        currentIndex = images.length - 1; // Перейти к последнему изображению
+    } else if (currentIndex >= images.length) {
+        currentIndex = 0; // Перейти к первому изображению
     }
+    const modalImage = document.getElementById('modalImage');
+    modalImage.src = images[currentIndex];
+}
+
 
 
 function toggleComparison(carId) {

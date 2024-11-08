@@ -207,15 +207,6 @@ class CarDetail(DetailView):
     template_name = 'main/car_detail.html'
     context_object_name = 'car'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-
-        # Get user's favorite cars and comparison list
-        context['favorite_cars'] = user.favorite_cars.all() if user.is_authenticated else []
-        context['comparison_cars'] = user.comparison.all() if user.is_authenticated else []
-
-        return context
 
 
 

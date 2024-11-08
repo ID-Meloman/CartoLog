@@ -3,6 +3,10 @@
 
 {% block title %}{{ car.model }} - Детали{% endblock %}
 
+{% block links %}
+    <link rel="stylesheet" href="{% static 'main/css/car_detail.css' %}">
+{% endblock %}
+
 {% block body %}
 {% include 'main/header.html' %}
 
@@ -34,10 +38,15 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <h2>Основные характеристики</h2>
+      <div class="col-md-6">
+        <h2>Основные характеристики</h2>
+        <p><strong>Двигатель:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
+        <p><strong>Мощность:</strong> {{ car.configuration.technical_specs.horsepower }} л.с.</p>
+        <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
+        <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
+        <p><strong>Привод:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
             <p><strong>Цвет:</strong> {{ car.color }}</p>
-            <!-- Другие характеристики -->
+        </div>
 
             <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
                 {% csrf_token %}
@@ -72,16 +81,6 @@
         </div>
 
 
-        <div class="col-md-6">
-            <h2>Основные характеристики</h2>
-            <p><strong>Цвет:</strong> {{ car.color }}</p>
-            <p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
-            <p><strong>LED фары:</strong> {{ car.led_headlights|yesno:"Да,Нет" }}</p>
-            <p><strong>Противотуманные фары:</strong> {{ car.fog_lights|yesno:"Да,Нет" }}</p>
-            <p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
-            <p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
-        </div>
-    </div>
 
     <h2>Технические характеристики</h2>
     <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
@@ -107,10 +106,8 @@
     <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
     <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}
     </p>
-    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет"
-        }}</p>
-    <p><strong>Адаптивный круиз-контроль:</strong> {{
-        car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"да,нет" }}</p>
+    <p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
 
     <h2>Комфорт</h2>
     <p><strong>Название уровня комфорта:</strong> {{ car.configuration.comfort.name }}</p>
@@ -119,18 +116,15 @@
     <p><strong>Подогрев сидений:</strong> {{ car.configuration.comfort.seat_heating|yesno:"Да,Нет" }}</p>
     <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
     <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
-    <p><strong>Электрическая регулировка сидений:</strong> {{
-        car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+    <p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
 
     <h2>Мультимедиа</h2>
     <p><strong>Название мультимедиа:</strong> {{ car.configuration.multimedia_connectivity.name }}</p>
-    <p><strong>Мультимедиа система:</strong> {{
-        car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
+    <p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
     <p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
     <p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
     <p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
-    <p><strong>Беспроводная связь:</strong> {{
-        car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
+    <p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
     <p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
 
     <h2>Дополнительные опции</h2>
@@ -138,8 +132,7 @@
     <p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}
     </p>
     <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
-    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет"
-        }}</p>
+    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
 </div>
 
 <!-- Модальное окно -->
@@ -153,8 +146,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center align-items-center" style="position: relative;">
                 <button class="btn btn-light position-absolute start-0" onclick="changeImage(-1)">&#10094;</button>
-                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid"
-                     style="max-width: 110vw; max-height: 110vh;"> <!-- Ограничиваем ширину изображения -->
+                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid modal-img" style="max-width: 100%; max-height: 80vh;">
                 <button class="btn btn-light position-absolute end-0" onclick="changeImage(1)">&#10095;</button>
             </div>
         </div>
