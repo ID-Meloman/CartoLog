@@ -153,3 +153,10 @@
     background-color: lightgreen; /* Или любой другой цвет для подсветки */
 }
 
+
+.search-input {
+    width: 200px; /* Ширина раскрытого поля */
+    opacity: 1;
+    display: block;
+    z-index: 10;
+}

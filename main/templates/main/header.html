@@ -1,22 +1,50 @@
 {% load static %}
 <nav class="navbar bg-body-tertiary">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'popular_page' %}">
-      <img src="{% static 'main/img/logo.png' %}" alt="" >
-    </a>
-    <div class="navbar-buttons d-flex">
-      <a href="{% url 'info_user' %}" class="btn">
-        <img src="{% static 'main/img/profile.png' %}" alt="Button 1" class="navbar-icon">
-      </a>
-      <a href="{% url 'favorites_page' %}" class="btn">
-        <img src="{% static 'main/img/favorite.png' %}" alt="Button 2" class="navbar-icon">
-      </a>
-      <a href="{% url 'comparison_view' %}" class="btn">
-        <img src="{% static 'main/img/compare.png' %}" alt="Button 3" class="navbar-icon">
-      </a>
-      <a href="#" class="btn">
-        <img src="{% static 'main/img/search.png' %}" alt="Button 4" class="navbar-icon">
-      </a>
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'popular_page' %}">
+            <img src="{% static 'main/img/logo.png' %}" alt="">
+        </a>
+        <div class="navbar-buttons d-flex">
+            <a href="{% url 'info_user' %}" class="btn">
+                <img src="{% static 'main/img/profile.png' %}" alt="Button 1" class="navbar-icon">
+            </a>
+            <a href="{% url 'favorites_page' %}" class="btn">
+                <img src="{% static 'main/img/favorite.png' %}" alt="Button 2" class="navbar-icon">
+            </a>
+            <a href="{% url 'comparison_view' %}" class="btn">
+                <img src="{% static 'main/img/compare.png' %}" alt="Button 3" class="navbar-icon">
+            </a>
+            <input type="text" class="search-input" placeholder="Поиск..." style="display: none; width: 200px;">
+            <a class="btn search-btn">
+                <img src="{% static 'main/img/search.png' %}" alt="Button 4" class="navbar-icon">
+            </a>
+        </div>
     </div>
-  </div>
 </nav>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const searchInput = $('.search-input');
+
+        // Показать/скрыть поле поиска при клике на иконку поиска
+        $('.search-btn').on('click', function(event) {
+            event.preventDefault();
+            if (searchInput.is(':visible')) {
+                searchInput.hide();
+            } else {
+                searchInput.show().focus();
+            }
+        });
+
+        // Закрытие поля поиска при клике вне поля и кнопки, если оно пустое
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.search-input, .search-btn').length) {
+                if (searchInput.val() === '') {
+                    searchInput.hide();
+                }
+            }
+        });
+    });
+</script>
