@@ -19,6 +19,10 @@
                             <div class="car-info text-center">
                                 <img src="{{ car.image.url }}" alt="Изображение автомобиля {{ car.model.brand }} {{ car.model.name }}" class="img-fluid car-image-large mb-2">
                                 <div>{{ car.model.brand }} {{ car.model.name }}</div>
+                                <form method="post" action="{% url 'remove_comparison' car.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить из сравнения</button>
+                                </form>
                             </div>
                         </th>
                     {% endfor %}

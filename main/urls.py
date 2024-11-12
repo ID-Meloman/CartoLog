@@ -26,6 +26,8 @@ urlpatterns = [
     path('comparison/', comparison_view, name='comparison_view'),
     path('toggle_comparison/<int:car_id>/', toggle_comparison, name='toggle_comparison'),
     path('car/<int:car_id>/toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
+    path('comparison/remove/<int:car_id>/', views.remove_comparison, name='remove_comparison'),
+
 ]
 
 if settings.DEBUG:

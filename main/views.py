@@ -1,6 +1,7 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.urls import reverse
 from django.views.generic import DetailView, DeleteView, UpdateView
 from main.models import Car, CarModel, Brand, Person, TransmissionDrive, Comparison
 from .forms import NewModel, NewPerson, LoginForm
@@ -266,5 +267,25 @@ def toggle_comparison(request, car_id):
             user.comparison.add(car)
 
         return JsonResponse({'is_in_comparison': not is_in_comparison})  # Возвращаем новое состояние
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+
+def remove_comparison(request, car_id):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return JsonResponse({'error': 'You must be logged in to remove from comparison.'}, status=403)
+
+    try:
+        car = get_object_or_404(Car, id=car_id)
+        user = get_object_or_404(Person, id=user_id)
+
+        # Remove car from comparison list
+        user.comparison.remove(car)
+
+        # Redirecting back to the comparison page
+        return redirect(reverse('comparison_view'))  # Replace with your comparison view name if different
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
