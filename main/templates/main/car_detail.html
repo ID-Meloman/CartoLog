@@ -38,107 +38,114 @@
             </div>
         </div>
 
-      <div class="col-md-6">
-        <h2>Основные характеристики</h2>
-        <p><strong>Двигатель:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
-        <p><strong>Мощность:</strong> {{ car.configuration.technical_specs.horsepower }} л.с.</p>
-        <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
-        <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
-        <p><strong>Привод:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+        <div class="col-md-6">
+            <h2>Основные характеристики</h2>
             <p><strong>Цвет:</strong> {{ car.color }}</p>
+            <p><strong>Двигатель:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
+            <p><strong>Мощность:</strong> {{ car.configuration.technical_specs.horsepower }} л.с.</p>
+            <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
+            <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
+            <p><strong>Привод:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
         </div>
+    </div>
 
-            <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
-                {% csrf_token %}
-                <button
-                        type="button"
-                        class="btn {% if car in comparison_cars %}btn-danger{% else %}btn-success{% endif %} compare-btn"
-                        data-car-id="{{ car.id }}"
-                        data-in-comparison="{% if car in comparison_cars %}true{% else %}false{% endif %}"
-                        onclick="toggleComparison({{ car.id }})">
-                    {% if car in comparison_cars %}
-                    <i class="fas fa-times"></i> Удалить из сравнения
-                    {% else %}
-                    <i class="fas fa-plus"></i> Добавить к сравнению
-                    {% endif %}
-                </button>
-            </form>
+    <!-- Кнопки "Добавить к сравнению" и "Избранное" -->
+    <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
+    {% csrf_token %}
+    <button type="button" class="btn {% if car in comparison_cars %}btn-danger{% else %}btn-success{% endif %} compare-btn"
+            data-car-id="{{ car.id }}" data-in-comparison="{% if car in comparison_cars %}true{% else %}false{% endif %}"
+            onclick="toggleComparison({{ car.id }})">
+        {% if car in comparison_cars %}
+            <i class="fas fa-times"></i> Удалить из сравнения
+        {% else %}
+            <i class="fas fa-plus"></i> Добавить к сравнению
+        {% endif %}
+    </button>
+</form>
 
-            <form method="POST" action="{% url 'toggle_favorite' car.id %}">
-                {% csrf_token %}
-                <button
-                        class="btn btn-warning favorite-toggle"
-                        data-car-id="{{ car.id }}"
-                        data-url="{% url 'toggle_favorite' car.id %}">
-                    {% if car in favorite_cars %}
-                    Убрать из избранного
-                    {% else %}
-                    Добавить в избранное
-                    {% endif %}
-                </button>
-            </form>
+<form method="POST" action="{% url 'toggle_favorite' car.id %}">
+    {% csrf_token %}
+    <button class="btn btn-warning favorite-toggle" data-car-id="{{ car.id }}" data-url="{% url 'toggle_favorite' car.id %}">
+        {% if car in favorite_cars %}
+            Убрать из избранного
+        {% else %}
+            Добавить в избранное
+        {% endif %}
+    </button>
+</form>
 
-        </div>
+    <!-- Все характеристики автомобиля -->
+    <h2>Полные технические характеристики</h2>
+<p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
+<p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
+<p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
+<p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
+<p><strong>Расход по городу:</strong> {{ car.configuration.technical_specs.fuel_consumption_city }} л/100км</p>
+<p><strong>Расход по трассе:</strong> {{ car.configuration.technical_specs.fuel_consumption_highway }} л/100км</p>
+<p><strong>Экологический класс:</strong> {{ car.configuration.technical_specs.emissions_class }}</p>
 
+<h2>Трансмиссия и привод</h2>
+<p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
+<p><strong>Количество передач:</strong> {{ car.configuration.transmission_drive.gears_count }}</p>
+<p><strong>Тип привода:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
 
+<h2>Подвеска и тормоза</h2>
+<p><strong>Передняя подвеска:</strong> {{ car.configuration.suspension_brakes.front_suspension }}</p>
+<p><strong>Задняя подвеска:</strong> {{ car.configuration.suspension_brakes.rear_suspension }}</p>
+<p><strong>Передние тормоза:</strong> {{ car.configuration.suspension_brakes.front_brakes }}</p>
+<p><strong>Задние тормоза:</strong> {{ car.configuration.suspension_brakes.rear_brakes }}</p>
 
-    <h2>Технические характеристики</h2>
-    <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
-    <p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
-    <p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
-    <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
-    <p><strong>Расход по городу:</strong> {{ car.configuration.technical_specs.fuel_consumption_city }} л/100км</p>
-    <p><strong>Расход по трассе:</strong> {{ car.configuration.technical_specs.fuel_consumption_highway }} л/100км</p>
-    <p><strong>Экологический класс:</strong> {{ car.configuration.technical_specs.emissions_class }}</p>
+<h2>Безопасность</h2>
+<p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
+<p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
+<p><strong>ESP:</strong> {{ car.configuration.safety_features.esp|yesno:"Да,Нет" }}</p>
+<p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
+<p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</p>
+<p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</p>
+<p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
 
-    <h2>Трансмиссия и привод</h2>
-    <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
-    <p><strong>Количество передач:</strong> {{ car.configuration.transmission_drive.gears_count }}</p>
-    <p><strong>Тип привода:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+<h2>Комфорт</h2>
+<p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
+<p><strong>Количество зон климат-контроля:</strong> {{ car.configuration.comfort.climate_zones }}</p>
+<p><strong>Материал сидений:</strong> {{ car.configuration.comfort.seat_material }}</p>
+<p><strong>Подогрев передних сидений:</strong> {{ car.configuration.comfort.front_seat_heating|yesno:"Да,Нет" }}</p>
+<p><strong>Подогрев задних сидений:</strong> {{ car.configuration.comfort.rear_seat_heating|yesno:"Да,Нет" }}</p>
+<p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
+<p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
+<p><strong>Люк:</strong> {{ car.configuration.comfort.sunroof|yesno:"Да,Нет" }}</p>
+<p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+<p><strong>Количество положений регулировки сидений:</strong> {{ car.configuration.comfort.seat_adjustment_positions }}</p>
 
-    <h2>Подвеска и тормоза</h2>
-    <p><strong>Тип подвески:</strong> {{ car.configuration.suspension_brakes.suspension_type }}</p>
-    <p><strong>Тип тормозов:</strong> {{ car.configuration.suspension_brakes.brake_type }}</p>
+<h2>Мультимедиа и подключение</h2>
+<p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
+<p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
+<p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
+<p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
+<p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
+<p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
+<p><strong>Apple CarPlay:</strong> {{ car.configuration.multimedia_connectivity.apple_carplay|yesno:"Да,Нет" }}</p>
+<p><strong>Android Auto:</strong> {{ car.configuration.multimedia_connectivity.android_auto|yesno:"Да,Нет" }}</p>
 
-    <h2>Безопасность</h2>
-    <p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
-    <p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
-    <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
-    <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}
-    </p>
-    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"да,нет" }}</p>
-    <p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+<h2>Дополнительные опции</h2>
+<p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
+<p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}</p>
+<p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
+<p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
+<p><strong>Камера 360:</strong> {{ car.configuration.additional_options.camera_360|yesno:"Да,Нет" }}</p>
 
-    <h2>Комфорт</h2>
-    <p><strong>Название уровня комфорта:</strong> {{ car.configuration.comfort.name }}</p>
-    <p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
-    <p><strong>Материал сидений:</strong> {{ car.configuration.comfort.seat_material }}</p>
-    <p><strong>Подогрев сидений:</strong> {{ car.configuration.comfort.seat_heating|yesno:"Да,Нет" }}</p>
-    <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
-    <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
-    <p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+<h2>Общие данные автомобиля</h2>
+<p><strong>Цвет:</strong> {{ car.color }}</p>
+<p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
+<p><strong>LED фары:</strong> {{ car.led_headlights|yesno:"Да,Нет" }}</p>
+<p><strong>Противотуманные фары:</strong> {{ car.fog_lights|yesno:"Да,Нет" }}</p>
+<p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
+<p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
 
-    <h2>Мультимедиа</h2>
-    <p><strong>Название мультимедиа:</strong> {{ car.configuration.multimedia_connectivity.name }}</p>
-    <p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
-    <p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
-    <p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
-    <p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
-    <p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
-    <p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
-
-    <h2>Дополнительные опции</h2>
-    <p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
-    <p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}
-    </p>
-    <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
-    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
 </div>
 
 <!-- Модальное окно -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
-        <!-- Ограничиваем максимальную ширину модального окна -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="imageModalLabel">Увеличенное изображение</h5>
@@ -152,7 +159,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'main/js/car_detail.js' %}"></script>
@@ -184,6 +190,5 @@
         });
     });
 </script>
-
 
 {% endblock %}

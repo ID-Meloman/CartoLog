@@ -207,7 +207,22 @@ class CarDetail(DetailView):
     template_name = 'main/car_detail.html'
     context_object_name = 'car'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        user_id = self.request.session.get('user_id')
+        comparison_cars = []
+        favorite_cars = []
+
+        if user_id:
+            user = Person.objects.get(id=user_id)
+            comparison_cars = user.comparison.all()
+            favorite_cars = user.favorite.all()
+
+        context['comparison_cars'] = comparison_cars
+        context['favorite_cars'] = favorite_cars
+
+        return context
 
 
 def get_models_by_brand(request):

@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
 # Таблица марок
 class Brand(models.Model):
     name = models.CharField(max_length=20, verbose_name='Марка автомобиля')
@@ -33,7 +32,7 @@ class TechnicalSpecs(models.Model):
     engine_type = models.CharField(max_length=20, verbose_name='Тип двигателя')
     engine_capacity = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Объем двигателя')
     horsepower = models.IntegerField(verbose_name='Лошадиные силы')
-    torque = models.IntegerField(verbose_name='Крутящий моемент')
+    torque = models.IntegerField(verbose_name='Крутящий момент')
     fuel_consumption_city = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход по городу')
     fuel_consumption_highway = models.DecimalField(max_digits=4, decimal_places=2, verbose_name='Расход по трассе')
     emissions_class = models.CharField(max_length=50, verbose_name='Экологический класс')
@@ -60,20 +59,23 @@ class TransmissionDrive(models.Model):
 
 # Таблица подвески и тормозов
 class SuspensionBrakes(models.Model):
-    suspension_type = models.CharField(max_length=255, verbose_name='Тип подвески')
-    brake_type = models.CharField(max_length=255, verbose_name='Тип тормозов')
+    front_suspension = models.CharField(max_length=255, verbose_name='Тип передней подвески')
+    rear_suspension = models.CharField(max_length=255, verbose_name='Тип задней подвески')
+    front_brakes = models.CharField(max_length=255, verbose_name='Тип передних тормозов')
+    rear_brakes = models.CharField(max_length=255, verbose_name='Тип задних тормозов')
 
     def __str__(self):
-        return f'{self.suspension_type}, {self.brake_type}'
+        return f'{self.front_suspension}, {self.rear_suspension}, {self.front_brakes}, {self.rear_brakes}'
 
     class Meta:
-        verbose_name = 'Подвеска и тормаза'
+        verbose_name = 'Подвеска и тормоза'
 
 
 # Таблица безопасности
 class SafetyFeatures(models.Model):
     airbags_count = models.IntegerField(verbose_name='Количество подушек')
     abs = models.BooleanField(verbose_name='Антиблокировочная система (ABS)')
+    esp = models.BooleanField(verbose_name='Система курсовой устойчивости (ESP)')
     traction_control = models.BooleanField(verbose_name='Контроль тяги')
     lane_assist = models.BooleanField(verbose_name='Помощь в удержании полосы движения')
     blind_spot_monitoring = models.BooleanField(verbose_name='Мониторинг слепых зон')
@@ -90,11 +92,15 @@ class SafetyFeatures(models.Model):
 class Comfort(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название уровня комфорта')
     climate_control = models.BooleanField(verbose_name='Климат-контроль')
+    climate_zones = models.IntegerField(verbose_name='Количество зон климат-контроля')
     seat_material = models.CharField(max_length=50, verbose_name='Материал сидений')
-    seat_heating = models.BooleanField(verbose_name='Подогрев сидений')
+    front_seat_heating = models.BooleanField(verbose_name='Подогрев передних сидений')
+    rear_seat_heating = models.BooleanField(verbose_name='Подогрев задних сидений')
     seat_ventilation = models.BooleanField(verbose_name='Вентиляция сидений')
     panoramic_roof = models.BooleanField(verbose_name='Панорамная крыша')
+    sunroof = models.BooleanField(verbose_name='Люк')
     electric_adjustments_seat = models.BooleanField(verbose_name='Электрическая регулировка сидений')
+    seat_adjustment_positions = models.IntegerField(verbose_name='Количество положений регулировки сидений')
 
     def __str__(self):
         return self.name
@@ -109,9 +115,11 @@ class MultimediaConnectivity(models.Model):
     infotainment_system = models.BooleanField(verbose_name='Мультимедиа')
     screen_size = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Размер экрана')
     navigation_system = models.BooleanField(verbose_name='Навигатор')
-    speakers_count = models.CharField(max_length=50, verbose_name='Поддерживаемые языки')
+    speakers_count = models.IntegerField(verbose_name='Количество динамиков')
     wireless_communication = models.BooleanField(verbose_name='Беспроводная связь')
     usb_ports = models.IntegerField(verbose_name='USB порты')
+    apple_carplay = models.BooleanField(verbose_name='Поддержка Apple CarPlay')
+    android_auto = models.BooleanField(verbose_name='Поддержка Android Auto')
 
     def __str__(self):
         return f'{self.name}, {self.screen_size}'
@@ -126,6 +134,7 @@ class AdditionalOptions(models.Model):
     adaptive_suspension = models.BooleanField(verbose_name='Пневмоподвеска')
     remote_start = models.BooleanField(verbose_name='Дистанционный запуск')
     parking_assistance = models.BooleanField(verbose_name='Помощь при парковке')
+    camera_360 = models.BooleanField(verbose_name='Камера 360')
 
     def __str__(self):
         return f'Фаркоп:{self.tow_bar}, Пневмо:{self.adaptive_suspension}, Дист пуск:{self.remote_start}, Парк мод:{self.parking_assistance}'
@@ -137,16 +146,13 @@ class AdditionalOptions(models.Model):
 # Основная таблица комплектаций
 class Configuration(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название конфигурации')
-    technical_specs = models.ForeignKey(TechnicalSpecs, on_delete=models.CASCADE,
-                                        verbose_name='Технические характеристики')
+    technical_specs = models.ForeignKey(TechnicalSpecs, on_delete=models.CASCADE, verbose_name='Технические характеристики')
     transmission_drive = models.ForeignKey(TransmissionDrive, on_delete=models.CASCADE, verbose_name='Трансмиссия')
     suspension_brakes = models.ForeignKey(SuspensionBrakes, on_delete=models.CASCADE, verbose_name='Подвеска и тормоза')
     safety_features = models.ForeignKey(SafetyFeatures, on_delete=models.CASCADE, verbose_name='Безопасность')
     comfort = models.ForeignKey(Comfort, on_delete=models.CASCADE, verbose_name='Комфорт')
-    multimedia_connectivity = models.ForeignKey(MultimediaConnectivity, on_delete=models.CASCADE,
-                                                verbose_name='Мультимедиа')
-    additional_options = models.ForeignKey(AdditionalOptions, on_delete=models.CASCADE,
-                                           verbose_name='Дополнительные опции')
+    multimedia_connectivity = models.ForeignKey(MultimediaConnectivity, on_delete=models.CASCADE, verbose_name='Мультимедиа')
+    additional_options = models.ForeignKey(AdditionalOptions, on_delete=models.CASCADE, verbose_name='Дополнительные опции')
 
     def __str__(self):
         return self.name
@@ -170,9 +176,7 @@ class Car(models.Model):
     image_front = models.ImageField(upload_to='car_images/', verbose_name='Изображение спереди', blank=True, null=True)
     image_side = models.ImageField(upload_to='car_images/', verbose_name='Изображение сбоку', blank=True, null=True)
     image_back = models.ImageField(upload_to='car_images/', verbose_name='Изображение сзади', blank=True, null=True)
-    image_interior = models.ImageField(upload_to='car_images/', verbose_name='Изображение внутри', blank=True,
-                                       null=True)
-
+    image_interior = models.ImageField(upload_to='car_images/', verbose_name='Изображение внутри', blank=True, null=True)
 
     def __str__(self):
         return f'{self.model} - {self.configuration} - {self.color}'
@@ -191,23 +195,23 @@ class Dealer(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Диллер'
-        verbose_name_plural = 'Диллеры'
+        verbose_name = 'Дилер'
+        verbose_name_plural = 'Дилеры'
 
 
 class Showroom(models.Model):
     name = models.CharField(max_length=30, verbose_name='Наименование автосалона')
-    address = models.CharField(max_length=50, verbose_name='адрес')
+    address = models.CharField(max_length=50, verbose_name='Адрес')
     contact = models.CharField(max_length=15, verbose_name='Контакт автосалона')
     website = models.CharField(max_length=50, verbose_name='Сайт автосалона')
-    dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE, verbose_name='Диллер')
+    dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE, verbose_name='Дилер')
 
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Автосалон'
-        verbose_name_plural = 'Австосалоны'
+        verbose_name_plural = 'Автосалоны'
 
 
 class CarInShowroom(models.Model):
@@ -220,6 +224,7 @@ class CarInShowroom(models.Model):
 
     class Meta:
         verbose_name = 'Машины в наличии'
+
 
 class Person(models.Model):
     name = models.CharField(max_length=30, verbose_name='Имя пользователя')
@@ -234,6 +239,7 @@ class Person(models.Model):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
 
 
 class Comparison(models.Model):

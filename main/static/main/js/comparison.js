@@ -1,20 +1,48 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const rows = document.querySelectorAll('.comparison-container tbody tr');
-    rows.forEach(row => {
-        const rowCells = Array.from(row.cells).slice(1); // исключаем первую ячейку (название характеристики)
-        let firstValue = rowCells[0].innerText.trim(); // удаляем пробелы
-        let isDifferent = false;
-
-        // Проверяем, если хотя бы одно значение отличается от первого
-        rowCells.forEach(cell => {
-            if (cell.innerText.trim() !== firstValue) { // удаляем пробелы и сравниваем
-                isDifferent = true;
+function toggleComparison(carId) {
+    $.ajax({
+        url: "{% url 'toggle_comparison' car.id %}",
+        method: "POST",
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            car_id: carId
+        },
+        success: function(response) {
+            if (response.is_in_comparison) {
+                // Обновить кнопку на "Удалить из сравнения"
+                $(`[data-car-id=${carId}]`).removeClass('btn-success').addClass('btn-danger').html('<i class="fas fa-times"></i> Удалить из сравнения');
+            } else {
+                // Обновить кнопку на "Добавить к сравнению"
+                $(`[data-car-id=${carId}]`).removeClass('btn-danger').addClass('btn-success').html('<i class="fas fa-plus"></i> Добавить к сравнению');
             }
-        });
+        },
+        error: function() {
+            alert('Произошла ошибка при обновлении сравнения');
+        }
+    });
+}
 
-        // Если различия найдены, добавляем класс Bootstrap для всех ячеек строки
-        if (isDifferent) {
-            rowCells.forEach(cell => cell.classList.add('table-warning')); // используем класс Bootstrap
+$('.favorite-toggle').click(function(e) {
+    e.preventDefault();
+    const button = $(this);
+    const carId = button.data('car-id');
+    const url = button.data('url');
+
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            car_id: carId
+        },
+        success: function(response) {
+            if (response.is_favorite) {
+                button.text('Убрать из избранного');
+            } else {
+                button.text('Добавить в избранное');
+            }
+        },
+        error: function() {
+            alert('Произошла ошибка при обновлении избранного');
         }
     });
 });
