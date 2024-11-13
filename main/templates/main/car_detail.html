@@ -105,85 +105,166 @@
             <a href="{% url 'car_check' car.id %}" class="btn btn-primary mt-3">Купить</a>
         </div>
     </div>
-</div>
+
 
 
 <!-- Все характеристики автомобиля -->
-<h2>Полные технические характеристики</h2>
-<p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
-<p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
-<p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
-<p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
-<p><strong>Расход по городу:</strong> {{ car.configuration.technical_specs.fuel_consumption_city }} л/100км</p>
-<p><strong>Расход по трассе:</strong> {{ car.configuration.technical_specs.fuel_consumption_highway }} л/100км</p>
-<p><strong>Экологический класс:</strong> {{ car.configuration.technical_specs.emissions_class }}</p>
+    <div class="accordion" id="carFeaturesAccordion">
 
-<h2>Трансмиссия и привод</h2>
-<p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
-<p><strong>Количество передач:</strong> {{ car.configuration.transmission_drive.gears_count }}</p>
-<p><strong>Тип привода:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+        <!-- Технические характеристики -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <strong style="color: #E32636; font-size: 1.2em;">Полные технические характеристики</strong>
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
+                    <p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
+                    <p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
+                    <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
+                    <p><strong>Расход по городу:</strong> {{ car.configuration.technical_specs.fuel_consumption_city }} л/100км</p>
+                    <p><strong>Расход по трассе:</strong> {{ car.configuration.technical_specs.fuel_consumption_highway }} л/100км</p>
+                    <p><strong>Экологический класс:</strong> {{ car.configuration.technical_specs.emissions_class }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Подвеска и тормоза</h2>
-<p><strong>Передняя подвеска:</strong> {{ car.configuration.suspension_brakes.front_suspension }}</p>
-<p><strong>Задняя подвеска:</strong> {{ car.configuration.suspension_brakes.rear_suspension }}</p>
-<p><strong>Передние тормоза:</strong> {{ car.configuration.suspension_brakes.front_brakes }}</p>
-<p><strong>Задние тормоза:</strong> {{ car.configuration.suspension_brakes.rear_brakes }}</p>
+        <!-- Трансмиссия и привод -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <strong style="color: red; font-size: 1.2em;">Трансмиссия и привод</strong>
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
+                    <p><strong>Количество передач:</strong> {{ car.configuration.transmission_drive.gears_count }}</p>
+                    <p><strong>Тип привода:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Безопасность</h2>
-<p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
-<p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
-<p><strong>ESP:</strong> {{ car.configuration.safety_features.esp|yesno:"Да,Нет" }}</p>
-<p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
-<p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}
-</p>
-<p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет"
-    }}</p>
-<p><strong>Адаптивный круиз-контроль:</strong> {{
-    car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+        <!-- Подвеска и тормоза -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <strong style="color: red; font-size: 1.2em;">Подвеска и тормоза</strong>
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Передняя подвеска:</strong> {{ car.configuration.suspension_brakes.front_suspension }}</p>
+                    <p><strong>Задняя подвеска:</strong> {{ car.configuration.suspension_brakes.rear_suspension }}</p>
+                    <p><strong>Передние тормоза:</strong> {{ car.configuration.suspension_brakes.front_brakes }}</p>
+                    <p><strong>Задние тормоза:</strong> {{ car.configuration.suspension_brakes.rear_brakes }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Комфорт</h2>
-<p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
-<p><strong>Количество зон климат-контроля:</strong> {{ car.configuration.comfort.climate_zones }}</p>
-<p><strong>Материал сидений:</strong> {{ car.configuration.comfort.seat_material }}</p>
-<p><strong>Подогрев передних сидений:</strong> {{ car.configuration.comfort.front_seat_heating|yesno:"Да,Нет" }}</p>
-<p><strong>Подогрев задних сидений:</strong> {{ car.configuration.comfort.rear_seat_heating|yesno:"Да,Нет" }}</p>
-<p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
-<p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
-<p><strong>Люк:</strong> {{ car.configuration.comfort.sunroof|yesno:"Да,Нет" }}</p>
-<p><strong>Электрическая регулировка сидений:</strong> {{
-    car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
-<p><strong>Количество положений регулировки сидений:</strong> {{ car.configuration.comfort.seat_adjustment_positions
-    }}</p>
+        <!-- Безопасность -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <strong style="color: red; font-size: 1.2em;">Безопасность</strong>
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Количество подушек:</strong> {{ car.configuration.safety_features.airbags_count }}</p>
+                    <p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
+                    <p><strong>ESP:</strong> {{ car.configuration.safety_features.esp|yesno:"Да,Нет" }}</p>
+                    <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
+                    <p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</p>
+                    <p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</p>
+                    <p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Мультимедиа и подключение</h2>
-<p><strong>Мультимедиа система:</strong> {{
-    car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
-<p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
-<p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
-<p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
-<p><strong>Беспроводная связь:</strong> {{
-    car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
-<p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
-<p><strong>Apple CarPlay:</strong> {{ car.configuration.multimedia_connectivity.apple_carplay|yesno:"Да,Нет" }}</p>
-<p><strong>Android Auto:</strong> {{ car.configuration.multimedia_connectivity.android_auto|yesno:"Да,Нет" }}</p>
+        <!-- Комфорт -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    <strong style="color: red; font-size: 1.2em;">Комфорт</strong>
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
+                    <p><strong>Количество зон климат-контроля:</strong> {{ car.configuration.comfort.climate_zones }}</p>
+                    <p><strong>Материал сидений:</strong> {{ car.configuration.comfort.seat_material }}</p>
+                    <p><strong>Подогрев передних сидений:</strong> {{ car.configuration.comfort.front_seat_heating|yesno:"Да,Нет" }}</p>
+                    <p><strong>Подогрев задних сидений:</strong> {{ car.configuration.comfort.rear_seat_heating|yesno:"Да,Нет" }}</p>
+                    <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
+                    <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
+                    <p><strong>Люк:</strong> {{ car.configuration.comfort.sunroof|yesno:"Да,Нет" }}</p>
+                    <p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+                    <p><strong>Количество положений регулировки сидений:</strong> {{ car.configuration.comfort.seat_adjustment_positions }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Дополнительные опции</h2>
-<p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
-<p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}
-</p>
-<p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
-<p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет"
-    }}</p>
-<p><strong>Камера 360:</strong> {{ car.configuration.additional_options.camera_360|yesno:"Да,Нет" }}</p>
+        <!-- Мультимедиа и подключение -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    <strong style="color: red; font-size: 1.2em;">Мультимедиа и подключение</strong>
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
+                    <p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
+                    <p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
+                    <p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
+                    <p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
+                    <p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
+                    <p><strong>Apple CarPlay:</strong> {{ car.configuration.multimedia_connectivity.apple_carplay|yesno:"Да,Нет" }}</p>
+                    <p><strong>Android Auto:</strong> {{ car.configuration.multimedia_connectivity.android_auto|yesno:"Да,Нет" }}</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Дополнительные опции -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                    <strong style="color: red; font-size: 1.2em;">Дополнительные опции</strong>
+                </button>
+            </h2>
+            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
+                    <p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}</p>
+                    <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
+                    <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
+                    <p><strong>Камера 360:</strong> {{ car.configuration.additional_options.camera_360|yesno:"Да,Нет" }}</p>
+                </div>
+            </div>
+        </div>
 
-<h2>Общие данные автомобиля</h2>
-<p><strong>Цвет:</strong> {{ car.color }}</p>
-<p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
-<p><strong>LED фары:</strong> {{ car.led_headlights|yesno:"Да,Нет" }}</p>
-<p><strong>Противотуманные фары:</strong> {{ car.fog_lights|yesno:"Да,Нет" }}</p>
-<p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
-<p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
+        <!-- Общие данные автомобиля -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEight">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                    <strong style="color: red; font-size: 1.2em;">Общие данные автомобиля</strong>
+                </button>
+            </h2>
+            <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight">
+                <div class="accordion-body" style="font-size: 1.1em;">
+                    <p><strong>Цвет:</strong> {{ car.color }}</p>
+                    <p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
+                    <p><strong>LED фары:</strong> {{ car.led_headlights|yesno:"Да,Нет" }}</p>
+                    <p><strong>Противотуманные фары:</strong> {{ car.fog_lights|yesno:"Да,Нет" }}</p>
+                    <p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
+                    <p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
+                </div>
+            </div>
+        </div>
+
 
 
 {% if car.vk_video_url %}
@@ -192,7 +273,7 @@
         allowfullscreen></iframe>
 {% endif %}
 
-</div>
+
 
 
 <!-- Модальное окно -->
