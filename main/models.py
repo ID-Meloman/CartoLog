@@ -177,6 +177,7 @@ class Car(models.Model):
     image_side = models.ImageField(upload_to='car_images/', verbose_name='Изображение сбоку', blank=True, null=True)
     image_back = models.ImageField(upload_to='car_images/', verbose_name='Изображение сзади', blank=True, null=True)
     image_interior = models.ImageField(upload_to='car_images/', verbose_name='Изображение внутри', blank=True, null=True)
+    vk_video_url = models.URLField(verbose_name='Ссылка на видео ВКонтакте', blank=True, null=True)
 
     def __str__(self):
         return f'{self.model} - {self.configuration} - {self.color}'

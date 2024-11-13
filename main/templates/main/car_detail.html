@@ -74,6 +74,8 @@
     </button>
 </form>
 
+
+
     <!-- Все характеристики автомобиля -->
     <h2>Полные технические характеристики</h2>
 <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
@@ -133,6 +135,7 @@
 <p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
 <p><strong>Камера 360:</strong> {{ car.configuration.additional_options.camera_360|yesno:"Да,Нет" }}</p>
 
+
 <h2>Общие данные автомобиля</h2>
 <p><strong>Цвет:</strong> {{ car.color }}</p>
 <p><strong>Размер колес:</strong> {{ car.wheel_size }} дюймов</p>
@@ -141,7 +144,16 @@
 <p><strong>Тонированные стекла:</strong> {{ car.tinted_windows|yesno:"Да,Нет" }}</p>
 <p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
 
+
+    {% if car.vk_video_url %}
+    <iframe src="{{ car.vk_video_url }}" width="640" height="360" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
+    {% endif %}
+
 </div>
+
+
+
+
 
 <!-- Модальное окно -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">

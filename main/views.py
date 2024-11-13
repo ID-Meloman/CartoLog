@@ -211,10 +211,16 @@ class CarDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Получение текущего автомобиля
+        car = self.get_object()
+        context['vk_video_url'] = car.vk_video_url  # Передача ссылки на видео в контекст
+
+        # Получение user_id из сессии
         user_id = self.request.session.get('user_id')
         comparison_cars = []
         favorite_cars = []
 
+        # Если пользователь существует, получить его данные о сравнении и избранном
         if user_id:
             user = Person.objects.get(id=user_id)
             comparison_cars = user.comparison.all()
