@@ -2,11 +2,27 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
-from django.views.generic import DetailView, DeleteView, UpdateView
-from main.models import Car, CarModel, Brand, Person, TransmissionDrive, Comparison
+from django.views.generic import DetailView, DeleteView, UpdateView, ListView
+from main.models import Car, CarModel, Brand, Person, TransmissionDrive, CarInShowroom
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 
+class CarCheckView(ListView):
+    model = CarInShowroom
+    template_name = 'main/car_check.html'
+    context_object_name = 'car_in_showroom_list'
+
+    def get_queryset(self):
+        # Получаем ID автомобиля из URL параметров
+        car_id = self.kwargs['car_id']
+        # Возвращаем только те объекты, которые связаны с данным автомобилем
+        return CarInShowroom.objects.filter(car__id=car_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Передаем также объект автомобиля для заголовка или другой информации
+        context['car'] = Car.objects.get(id=self.kwargs['car_id'])
+        return context
 
 def info_user(request):
     # Проверяем, авторизован ли пользователь
@@ -232,6 +248,8 @@ class CarDetail(DetailView):
         return context
 
 
+
+
 def get_models_by_brand(request):
     brand_id = request.GET.get('brand_id')
     models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
@@ -295,3 +313,4 @@ def remove_comparison(request, car_id):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+

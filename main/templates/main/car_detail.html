@@ -4,7 +4,7 @@
 {% block title %}{{ car.model }} - Детали{% endblock %}
 
 {% block links %}
-    <link rel="stylesheet" href="{% static 'main/css/car_detail.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/car_detail.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -12,32 +12,59 @@
 
 <div class="container mt-4">
     <h1>{{ car.model }} - {{ car.configuration.name }}</h1>
+
     <div class="row">
+        <!-- Карусель изображений -->
         <div class="col-md-6">
-            <!-- Главное изображение -->
-            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }} - Изображение"
-                 data-bs-toggle="modal" data-bs-target="#imageModal"
-                 onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 0)">
-            <div class="row mt-2">
-                <!-- Изображения автомобиля с модальным окном -->
-                <div class="col-md-4">
-                    <img src="{{ car.image_front.url }}" class="img-fluid" alt="Спереди"
-                         data-bs-toggle="modal" data-bs-target="#imageModal"
-                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 1)">
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+                            aria-label="Slide 4"></button>
                 </div>
-                <div class="col-md-4">
-                    <img src="{{ car.image_side.url }}" class="img-fluid" alt="Сбоку"
-                         data-bs-toggle="modal" data-bs-target="#imageModal"
-                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 2)">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ car.image.url }}" class="d-block w-100 carousel-image"
+                             alt="{{ car.model }} - Изображение"
+                             data-bs-toggle="modal" data-bs-target="#imageModal"
+                             onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 0)">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ car.image_front.url }}" class="d-block w-100 carousel-image" alt="..."
+                             data-bs-toggle="modal" data-bs-target="#imageModal"
+                             onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 1)">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ car.image_side.url }}" class="d-block w-100 carousel-image" alt="..."
+                             data-bs-toggle="modal" data-bs-target="#imageModal"
+                             onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 2)">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ car.image_back.url }}" class="d-block w-100 carousel-image" alt="..."
+                             data-bs-toggle="modal" data-bs-target="#imageModal"
+                             onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 3)">
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="{{ car.image_back.url }}" class="img-fluid" alt="Сзади"
-                         data-bs-toggle="modal" data-bs-target="#imageModal"
-                         onclick="setModalImage('{{ car.image.url }}', '{{ car.image_front.url }}', '{{ car.image_side.url }}', '{{ car.image_back.url }}', 3)">
-                </div>
+                <button class="carousel-control-prev custom-carousel-control" type="button"
+                        data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next custom-carousel-control" type="button"
+                        data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
         </div>
 
+        <!-- Основные характеристики и кнопки -->
         <div class="col-md-6">
             <h2>Основные характеристики</h2>
             <p><strong>Цвет:</strong> {{ car.color }}</p>
@@ -46,38 +73,43 @@
             <p><strong>Крутящий момент:</strong> {{ car.configuration.technical_specs.torque }} Нм</p>
             <p><strong>Коробка передач:</strong> {{ car.configuration.transmission_drive.transmission }}</p>
             <p><strong>Привод:</strong> {{ car.configuration.transmission_drive.drive_type }}</p>
+
+            <!-- Кнопки "Добавить к сравнению" и "Избранное" -->
+            <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
+                {% csrf_token %}
+                <button type="button"
+                        class="btn {% if car in comparison_cars %}btn-danger{% else %}btn-success{% endif %} compare-btn"
+                        data-car-id="{{ car.id }}"
+                        data-in-comparison="{% if car in comparison_cars %}true{% else %}false{% endif %}"
+                        onclick="toggleComparison({{ car.id }})">
+                    {% if car in comparison_cars %}
+                    <i class="fas fa-times"></i> Удалить из сравнения
+                    {% else %}
+                    <i class="fas fa-plus"></i> Добавить к сравнению
+                    {% endif %}
+                </button>
+            </form>
+
+            <form method="POST" action="{% url 'toggle_favorite' car.id %}">
+                {% csrf_token %}
+                <button class="btn btn-warning favorite-toggle" data-car-id="{{ car.id }}"
+                        data-url="{% url 'toggle_favorite' car.id %}">
+                    {% if car in favorite_cars %}
+                    Убрать из избранного
+                    {% else %}
+                    Добавить в избранное
+                    {% endif %}
+                </button>
+            </form>
+
+            <a href="{% url 'car_check' car.id %}" class="btn btn-primary mt-3">Купить</a>
         </div>
     </div>
-
-    <!-- Кнопки "Добавить к сравнению" и "Избранное" -->
-    <form method="POST" action="{% url 'toggle_comparison' car.id %}" id="comparison-form-{{ car.id }}">
-    {% csrf_token %}
-    <button type="button" class="btn {% if car in comparison_cars %}btn-danger{% else %}btn-success{% endif %} compare-btn"
-            data-car-id="{{ car.id }}" data-in-comparison="{% if car in comparison_cars %}true{% else %}false{% endif %}"
-            onclick="toggleComparison({{ car.id }})">
-        {% if car in comparison_cars %}
-            <i class="fas fa-times"></i> Удалить из сравнения
-        {% else %}
-            <i class="fas fa-plus"></i> Добавить к сравнению
-        {% endif %}
-    </button>
-</form>
-
-<form method="POST" action="{% url 'toggle_favorite' car.id %}">
-    {% csrf_token %}
-    <button class="btn btn-warning favorite-toggle" data-car-id="{{ car.id }}" data-url="{% url 'toggle_favorite' car.id %}">
-        {% if car in favorite_cars %}
-            Убрать из избранного
-        {% else %}
-            Добавить в избранное
-        {% endif %}
-    </button>
-</form>
+</div>
 
 
-
-    <!-- Все характеристики автомобиля -->
-    <h2>Полные технические характеристики</h2>
+<!-- Все характеристики автомобиля -->
+<h2>Полные технические характеристики</h2>
 <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
 <p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
 <p><strong>Лошадиные силы:</strong> {{ car.configuration.technical_specs.horsepower }}</p>
@@ -102,9 +134,12 @@
 <p><strong>ABS:</strong> {{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</p>
 <p><strong>ESP:</strong> {{ car.configuration.safety_features.esp|yesno:"Да,Нет" }}</p>
 <p><strong>Контроль тяги:</strong> {{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</p>
-<p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</p>
-<p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</p>
-<p><strong>Адаптивный круиз-контроль:</strong> {{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
+<p><strong>Помощь в удержании полосы:</strong> {{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}
+</p>
+<p><strong>Мониторинг слепых зон:</strong> {{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет"
+    }}</p>
+<p><strong>Адаптивный круиз-контроль:</strong> {{
+    car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</p>
 
 <h2>Комфорт</h2>
 <p><strong>Климат-контроль:</strong> {{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</p>
@@ -115,24 +150,30 @@
 <p><strong>Вентиляция сидений:</strong> {{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</p>
 <p><strong>Панорамная крыша:</strong> {{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</p>
 <p><strong>Люк:</strong> {{ car.configuration.comfort.sunroof|yesno:"Да,Нет" }}</p>
-<p><strong>Электрическая регулировка сидений:</strong> {{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
-<p><strong>Количество положений регулировки сидений:</strong> {{ car.configuration.comfort.seat_adjustment_positions }}</p>
+<p><strong>Электрическая регулировка сидений:</strong> {{
+    car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</p>
+<p><strong>Количество положений регулировки сидений:</strong> {{ car.configuration.comfort.seat_adjustment_positions
+    }}</p>
 
 <h2>Мультимедиа и подключение</h2>
-<p><strong>Мультимедиа система:</strong> {{ car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
+<p><strong>Мультимедиа система:</strong> {{
+    car.configuration.multimedia_connectivity.infotainment_system|yesno:"Да,Нет" }}</p>
 <p><strong>Размер экрана:</strong> {{ car.configuration.multimedia_connectivity.screen_size }} дюймов</p>
 <p><strong>Навигатор:</strong> {{ car.configuration.multimedia_connectivity.navigation_system|yesno:"Да,Нет" }}</p>
 <p><strong>Количество динамиков:</strong> {{ car.configuration.multimedia_connectivity.speakers_count }}</p>
-<p><strong>Беспроводная связь:</strong> {{ car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
+<p><strong>Беспроводная связь:</strong> {{
+    car.configuration.multimedia_connectivity.wireless_communication|yesno:"Да,Нет" }}</p>
 <p><strong>USB порты:</strong> {{ car.configuration.multimedia_connectivity.usb_ports }}</p>
 <p><strong>Apple CarPlay:</strong> {{ car.configuration.multimedia_connectivity.apple_carplay|yesno:"Да,Нет" }}</p>
 <p><strong>Android Auto:</strong> {{ car.configuration.multimedia_connectivity.android_auto|yesno:"Да,Нет" }}</p>
 
 <h2>Дополнительные опции</h2>
 <p><strong>Фаркоп:</strong> {{ car.configuration.additional_options.tow_bar|yesno:"Да,Нет" }}</p>
-<p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}</p>
+<p><strong>Пневмоподвеска:</strong> {{ car.configuration.additional_options.adaptive_suspension|yesno:"Да,Нет" }}
+</p>
 <p><strong>Дистанционный запуск:</strong> {{ car.configuration.additional_options.remote_start|yesno:"Да,Нет" }}</p>
-<p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет" }}</p>
+<p><strong>Помощь при парковке:</strong> {{ car.configuration.additional_options.parking_assistance|yesno:"Да,Нет"
+    }}</p>
 <p><strong>Камера 360:</strong> {{ car.configuration.additional_options.camera_360|yesno:"Да,Нет" }}</p>
 
 
@@ -145,14 +186,13 @@
 <p><strong>Рейлинги на крыше:</strong> {{ car.roof_rails|yesno:"Да,Нет" }}</p>
 
 
-    {% if car.vk_video_url %}
-    <iframe src="{{ car.vk_video_url }}" width="640" height="360" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
-    {% endif %}
+{% if car.vk_video_url %}
+<iframe src="{{ car.vk_video_url }}" width="640" height="360"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0"
+        allowfullscreen></iframe>
+{% endif %}
 
 </div>
-
-
-
 
 
 <!-- Модальное окно -->
@@ -165,7 +205,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center align-items-center" style="position: relative;">
                 <button class="btn btn-light position-absolute start-0" onclick="changeImage(-1)">&#10094;</button>
-                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid modal-img" style="max-width: 100%; max-height: 80vh;">
+                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid modal-img"
+                     style="max-width: 100%; max-height: 80vh;">
                 <button class="btn btn-light position-absolute end-0" onclick="changeImage(1)">&#10095;</button>
             </div>
         </div>

@@ -219,6 +219,7 @@ class CarInShowroom(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
     showroom = models.ForeignKey(Showroom, on_delete=models.CASCADE, verbose_name='Автосалон')
     quantity = models.IntegerField(verbose_name='Количество в наличии')
+    price = models.IntegerField(verbose_name='Цена')
 
     def __str__(self):
         return f'{self.car} - {self.showroom} - {self.quantity}'

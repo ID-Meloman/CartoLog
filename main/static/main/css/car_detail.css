@@ -11,3 +11,17 @@
     margin-top: 15px; /* дополнительный отступ сверху, если нужно */
 }
 
+.carousel-image {
+    height: 400px; /* Задайте нужную высоту */
+    object-fit: cover; /* Масштабирует изображение, сохраняя пропорции */
+}
+
+.custom-carousel-control .carousel-control-prev-icon,
+.custom-carousel-control .carousel-control-next-icon {
+    background-color: black; /* Устанавливает черный цвет фона */
+    border-radius: 50%; /* Закругленные края */
+    width: 30px; /* Настройте размер по вашему желанию */
+    height: 30px;
+}
+
+

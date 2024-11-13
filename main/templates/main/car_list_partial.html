@@ -10,6 +10,48 @@
         <h5 class="card-title">{{ item.model }}</h5>
         <p class="card-title">Цвет: {{ item.color }}</p>
         <a href="{% url 'car_detail' item.id %}" class="btn btn-primary">Подробнее</a>
+        <form method="POST" action="{% url 'toggle_favorite' item.id %}">
+                {% csrf_token %}
+                <button
+                        class="btn btn-warning favorite-toggle"
+                        data-car-id="{{ item.id }}"
+                        data-url="{% url 'toggle_favorite' item.id %}">
+                    {% if item in favorite_cars %}
+                    Убрать из избранного
+                    {% else %}
+                    Добавить в избранное
+                    {% endif %}
+                </button>
+            </form>
     </div>
 </div>
 {% endfor %}
+
+<script>
+    $(document).ready(function() {
+        $('.favorite-toggle').click(function(e) {
+            e.preventDefault(); // предотвращаем перезагрузку страницы
+            const button = $(this);
+            const carId = button.data('car-id');
+            const url = button.data('url');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.is_favorite) {
+                        button.text('Убрать из избранного');
+                    } else {
+                        button.text('Добавить в избранное');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert(xhr.responseJSON.error || 'Ошибка при обработке запроса');
+                }
+            });
+        });
+    });
+</script>
