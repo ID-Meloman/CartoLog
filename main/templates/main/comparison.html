@@ -28,181 +28,57 @@
                     {% endfor %}
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Тип двигателя</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.engine_type %}{{ car.configuration.technical_specs.engine_type }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Объем двигателя</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.engine_capacity %}{{ car.configuration.technical_specs.engine_capacity }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Лошадиные силы</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.horsepower %}{{ car.configuration.technical_specs.horsepower }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Крутящий момент</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.torque %}{{ car.configuration.technical_specs.torque }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Расход по городу</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.fuel_consumption_city %}{{ car.configuration.technical_specs.fuel_consumption_city }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Расход по трассе</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.fuel_consumption_highway %}{{ car.configuration.technical_specs.fuel_consumption_highway }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Экологический класс</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.technical_specs.emissions_class %}{{ car.configuration.technical_specs.emissions_class }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Коробка передач</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.transmission_drive.transmission %}{{ car.configuration.transmission_drive.transmission }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Количество передач</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.transmission_drive.gears_count %}{{ car.configuration.transmission_drive.gears_count }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Тип привода</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.transmission_drive.drive_type %}{{ car.configuration.transmission_drive.drive_type }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Тип подвески</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.suspension_brakes.suspension_type %}{{ car.configuration.suspension_brakes.suspension_type }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Тип тормозов</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.suspension_brakes.brake_type %}{{ car.configuration.suspension_brakes.brake_type }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Количество подушек</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.airbags_count %}{{ car.configuration.safety_features.airbags_count }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Антиблокировочная система (ABS)</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.abs %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Контроль тяги</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.traction_control %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Помощь в удержании полосы</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.lane_assist %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Мониторинг слепых зон</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.blind_spot_monitoring %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Адаптивный круиз-контроль</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.safety_features.adaptive_cruise_control %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Название уровня комфорта</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.name %}{{ car.configuration.comfort.name }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Климат-контроль</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.climate_control %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Материал сидений</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.seat_material %}{{ car.configuration.comfort.seat_material }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Подогрев сидений</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.seat_heating %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Вентиляция сидений</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.seat_ventilation %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Панорамная крыша</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.panoramic_roof %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Электрическая регулировка сидений</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.comfort.electric_adjustments_seat %}Да{% else %}Нет{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Название мультимедиа</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.multimedia_connectivity.name %}{{ car.configuration.multimedia_connectivity.name }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Размер экрана</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.multimedia_connectivity.screen_size %}{{ car.configuration.multimedia_connectivity.screen_size }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Системы подключения</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.configuration.multimedia_connectivity.systems %}{{ car.configuration.multimedia_connectivity.systems }}{% else %}Не указано{% endif %}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>Цена</td>
-                    {% for car in comparisons %}
-                        <td>{% if car.price %}{{ car.price }}{% else %}Не указана{% endif %}</td>
-                    {% endfor %}
-                </tr>
+  <tbody>
+                <!-- Engine Specs -->
+                <tr><td>Тип двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_type|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Объем двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_capacity|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Лошадиные силы</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.horsepower|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Крутящий момент</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.torque|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Расход по городу</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_city|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Расход по трассе</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_highway|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Экологический класс</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.emissions_class|default:"Не указано" }}</td>{% endfor %}</tr>
+
+                <!-- Transmission and Drive -->
+                <tr><td>Коробка передач</td>{% for car in comparisons %}<td>{{ car.configuration.transmission_drive.transmission|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Количество передач</td>{% for car in comparisons %}<td>{{ car.configuration.transmission_drive.gears_count|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Тип привода</td>{% for car in comparisons %}<td>{{ car.configuration.transmission_drive.drive_type|default:"Не указано" }}</td>{% endfor %}</tr>
+
+                <!-- Suspension and Brakes -->
+                <tr><td>Передняя подвеска</td>{% for car in comparisons %}<td>{{ car.configuration.suspension_brakes.front_suspension|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Задняя подвеска</td>{% for car in comparisons %}<td>{{ car.configuration.suspension_brakes.rear_suspension|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Передние тормоза</td>{% for car in comparisons %}<td>{{ car.configuration.suspension_brakes.front_brakes|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Задние тормоза</td>{% for car in comparisons %}<td>{{ car.configuration.suspension_brakes.rear_brakes|default:"Не указано" }}</td>{% endfor %}</tr>
+
+                <!-- Safety Features -->
+                <tr><td>Количество подушек</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.airbags_count|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>ABS</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.abs|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>ESP</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.esp|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Контроль тяги</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.traction_control|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Помощь в удержании полосы</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.lane_assist|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Мониторинг слепых зон</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.blind_spot_monitoring|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Адаптивный круиз-контроль</td>{% for car in comparisons %}<td>{{ car.configuration.safety_features.adaptive_cruise_control|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+
+                <!-- Comfort -->
+                <tr><td>Уровень комфорта</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.name|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Климат-контроль</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.climate_control|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Количество зон климат-контроля</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.climate_zones|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Материал сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.seat_material|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Подогрев передних сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.front_seat_heating|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Подогрев задних сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.rear_seat_heating|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Вентиляция сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.seat_ventilation|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Панорамная крыша</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.panoramic_roof|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Люк</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.sunroof|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Электрическая регулировка сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.electric_adjustments_seat|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Количество положений сидений</td>{% for car in comparisons %}<td>{{ car.configuration.comfort.seat_adjustment_positions|default:"Не указано" }}</td>{% endfor %}</tr>
+
+                <!-- Multimedia -->
+                <tr><td>Мультимедиа</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.name|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Размер экрана</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.screen_size|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Навигатор</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.navigator|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Bluetooth</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.bluetooth|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>Wi-Fi</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.wifi|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
+                <tr><td>USB-порты</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.usb_ports|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Беспроводная зарядка</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.wireless_charging|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
             </tbody>
         </table>
     </div>

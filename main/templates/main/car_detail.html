@@ -65,7 +65,7 @@
         </div>
 
         <!-- Основные характеристики и кнопки -->
-        <div class="col-md-6">
+        <div class="col-md-5 offset-md-1">
             <h2>Основные характеристики</h2>
             <p><strong>Цвет:</strong> {{ car.color }}</p>
             <p><strong>Двигатель:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
@@ -102,7 +102,7 @@
                 </button>
             </form>
 
-            <a href="{% url 'car_check' car.id %}" class="btn btn-primary mt-3">Купить</a>
+            <a href="{% url 'car_check' car.id %}" class="btn btn-primary mt-4">Купить</a>
         </div>
     </div>
 
@@ -115,10 +115,10 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <strong style="color: #E32636; font-size: 1.2em;">Полные технические характеристики</strong>
+                    <strong style="color: black; font-size: 1.2em;">Полные технические характеристики</strong>
                 </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
                 <div class="accordion-body" style="font-size: 1.1em;">
                     <p><strong>Тип двигателя:</strong> {{ car.configuration.technical_specs.engine_type }}</p>
                     <p><strong>Объем двигателя:</strong> {{ car.configuration.technical_specs.engine_capacity }} л</p>
@@ -135,7 +135,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingTwo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <strong style="color: red; font-size: 1.2em;">Трансмиссия и привод</strong>
+                    <strong style="color: black; font-size: 1.2em;">Трансмиссия и привод</strong>
                 </button>
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
@@ -151,7 +151,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    <strong style="color: red; font-size: 1.2em;">Подвеска и тормоза</strong>
+                    <strong style="color: black; font-size: 1.2em;">Подвеска и тормоза</strong>
                 </button>
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
@@ -168,7 +168,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingFour">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                    <strong style="color: red; font-size: 1.2em;">Безопасность</strong>
+                    <strong style="color: black; font-size: 1.2em;">Безопасность</strong>
                 </button>
             </h2>
             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
@@ -188,7 +188,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingFive">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                    <strong style="color: red; font-size: 1.2em;">Комфорт</strong>
+                    <strong style="color: black; font-size: 1.2em;">Комфорт</strong>
                 </button>
             </h2>
             <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive">
@@ -211,7 +211,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingSix">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                    <strong style="color: red; font-size: 1.2em;">Мультимедиа и подключение</strong>
+                    <strong style="color: black; font-size: 1.2em;">Мультимедиа и подключение</strong>
                 </button>
             </h2>
             <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
@@ -232,7 +232,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingSeven">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                    <strong style="color: red; font-size: 1.2em;">Дополнительные опции</strong>
+                    <strong style="color: black; font-size: 1.2em;">Дополнительные опции</strong>
                 </button>
             </h2>
             <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven">
@@ -250,7 +250,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingEight">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                    <strong style="color: red; font-size: 1.2em;">Общие данные автомобиля</strong>
+                    <strong style="color: black; font-size: 1.2em;">Общие данные автомобиля</strong>
                 </button>
             </h2>
             <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight">
