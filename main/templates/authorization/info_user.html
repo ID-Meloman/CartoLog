@@ -1,28 +1,28 @@
 {% extends 'main/layout.html' %}
 
 {% load static %}
-{% block title %}CartoLog{% endblock %}
+{% block title %}CartoLog - Профиль{% endblock %}
 
 {% block links %}
-<link rel="stylesheet" href="{% static 'main/css/popular.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/info_user.css' %}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMliKLnmY5c9b0CJv18MG8IE1FZnX9czD59lfgd" crossorigin="anonymous">
+
 {% endblock %}
 
 {% block body %}
 {% include 'main/header.html' %}
 
-<h1>Профиль пользователя</h1>
-
+<div class="profile-container">
+    <h1>Профиль пользователя</h1>
     <p><strong>Имя:</strong> {{ user.name }}</p>
     <p><strong>Почта:</strong> {{ user.email }}</p>
-
     <!-- Дополнительные данные пользователя -->
     <p><strong>Пароль:</strong> {{ user.password }}</p>
-
     <form action="{% url 'logout_user' %}" method="post">
         {% csrf_token %}
         <button type="submit">Выйти</button>
     </form>
+</div>
 
 {% endblock %}
