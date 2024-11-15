@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -314,3 +315,21 @@ def remove_comparison(request, car_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+def search_cars(request):
+    query = request.GET.get('q', '')
+    if query:
+        cars = Car.objects.filter(
+            Q(model__name__icontains=query) | Q(model__brand__name__icontains=query)
+        ).select_related('model__brand')
+        results = [
+            {
+                'id': car.id,
+                'brand': car.model.brand.name,
+                'model': car.model.name,
+                'color': car.color,
+            }
+            for car in cars
+        ]
+    else:
+        results = []
+    return JsonResponse({'results': results})

@@ -1,4 +1,9 @@
 {% load static %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'main/css/header.css' %}">
+{% endblock %}
+
 <nav class="navbar bg-body-tertiary">
     <div class="container">
         <a class="navbar-brand" href="{% url 'popular_page' %}">
@@ -14,7 +19,9 @@
             <a href="{% url 'comparison_view' %}" class="btn">
                 <img src="{% static 'main/img/compare.png' %}" alt="Button 3" class="navbar-icon">
             </a>
-            <input type="text" class="search-input" placeholder="Поиск..." style="display: none; width: 200px;">
+            <!-- Поле ввода для поиска -->
+            <input type="text" class="search-input" placeholder="Введите марку или модель..." style="display: none; width: 300px;">
+            <!-- Кнопка для активации поиска -->
             <a class="btn search-btn">
                 <img src="{% static 'main/img/search.png' %}" alt="Button 4" class="navbar-icon">
             </a>
@@ -26,25 +33,67 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        const searchInput = $('.search-input');
+    const searchInput = $('.search-input');
+    const searchResults = $('<div class="search-results"></div>').hide().appendTo('body');
 
-        // Показать/скрыть поле поиска при клике на иконку поиска
-        $('.search-btn').on('click', function(event) {
-            event.preventDefault();
-            if (searchInput.is(':visible')) {
-                searchInput.hide();
-            } else {
-                searchInput.show().focus();
-            }
-        });
+    $('.search-btn').on('click', function() {
+        searchInput.toggle();
+        if (searchInput.is(':visible')) {
+            searchInput.focus();
+        } else {
+            searchResults.hide();
+        }
+    });
 
-        // Закрытие поля поиска при клике вне поля и кнопки, если оно пустое
-        $(document).on('click', function(event) {
-            if (!$(event.target).closest('.search-input, .search-btn').length) {
-                if (searchInput.val() === '') {
-                    searchInput.hide();
-                }
-            }
+    searchInput.on('input', function() {
+        const query = $(this).val();
+        if (query.length > 2) {
+            $.ajax({
+                url: "{% url 'search_cars' %}",
+                data: { q: query },
+                success: function(data) {
+                    searchResults.empty().show();
+                    if (data.results.length) {
+                        data.results.forEach(car => {
+                            const resultItem = $(`
+                                <div class="search-result-item" data-id="${car.id}">
+                                    <strong>${car.brand}</strong> ${car.model} - ${car.color}
+                                </div>
+                            `);
+                            resultItem.appendTo(searchResults);
+                        });
+
+                        // Обработчик клика на элемент списка
+                        $('.search-result-item').on('click', function() {
+                            const carId = $(this).data('id');
+                            window.location.href = `/car/${carId}/`;
+                        });
+                    } else {
+                        searchResults.append('<div class="search-result-item">No results found</div>');
+                    }
+                },
+            });
+        } else {
+            searchResults.hide();
+        }
+    });
+
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.search-input, .search-results, .search-btn').length) {
+            searchResults.hide();
+            searchInput.hide();
+        }
+    });
+
+    searchInput.on('focus', function() {
+        const offset = $(this).offset();
+        searchResults.css({
+            top: offset.top + $(this).outerHeight(),
+            left: offset.left,
+            width: $(this).outerWidth(),
         });
-    });св
+    });
+});
+
+
 </script>

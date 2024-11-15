@@ -5,13 +5,13 @@ from django.urls import path
 from . import views
 from .views import (popular, form_newmodel, CarDetail, CarDelete, CarUpdate, filter_cars, favorites,
                     get_models_by_brand, registration_user_form, login_user, info_user, comparison_view,
-                    toggle_comparison, CarCheckView)
+                    toggle_comparison, CarCheckView, search_cars)
 
 urlpatterns = [
     path('', popular, name='popular_page'),
     path('favorites/', favorites, name='favorites_page'),  # Обратите внимание на добавление слэша в конце
     path('newmodel/', form_newmodel, name='newmodel_page'),  # Также добавьте слэш в конце для консистентности
-    path('<int:pk>/', CarDetail.as_view(), name='car_detail'),  # Добавьте слэш в конце
+    path('car/<int:pk>/', CarDetail.as_view(), name='car_detail'),  # Добавьте слэш в конце
     path('<int:pk>/update/', CarUpdate.as_view(), name='car_update'),  # Добавьте слэш в конце
     path('<int:pk>/delete/', CarDelete.as_view(), name='car_delete'),  # Добавьте слэш в конце
     path('filter-cars/', filter_cars, name='filter_cars'),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('car/<int:car_id>/toggle_favorite/', views.toggle_favorite, name='toggle_favorite'),
     path('comparison/remove/<int:car_id>/', views.remove_comparison, name='remove_comparison'),
     path('car/<int:car_id>/check/', CarCheckView.as_view(), name='car_check'),
+    path('api/search/', search_cars, name='search_cars'),
 
 ]
 
