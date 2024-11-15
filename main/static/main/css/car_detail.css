@@ -1,6 +1,6 @@
 .modal-img {
-    width: 800px;       /* Фиксированная ширина */
-    height: 600px;      /* Фиксированная высота */
+    width: 600px;       /* Фиксированная ширина */
+    height: 400px;      /* Фиксированная высота */
     object-fit: contain; /* Сохраняем пропорции изображения */
     margin: 0 auto;      /* Центрируем изображение */
 }
@@ -24,4 +24,57 @@
     height: 30px;
 }
 
+.characteristics-container {
+    display: flex;
+    gap: 10px; /* Расстояние между характеристиками */
+    flex-wrap: wrap; /* Чтобы на маленьких экранах элементы переходили на следующую строку */
+}
 
+.characteristic {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0; /* Светло-серый фон */
+    border-radius: 10px; /* Закругленные углы */
+    padding: 5px; /* Отступы внутри прямоугольника */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень для объема */
+}
+
+.characteristic img {
+    margin-right: 5px; /* Отступ между иконкой и текстом */
+    width: 24px; /* Размер иконки */
+    height: 24px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Растягивает дочерние элементы на всю ширину контейнера */
+    gap: 10px; /* Расстояние между кнопками */
+    margin-top: 20px; /* Отступ сверху для кнопок */
+    margin-bottom: 20px;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: space-between; /* Кнопки на одном уровне, с равным промежутком */
+    gap: 10px; /* Промежуток между кнопками */
+}
+
+.top-buttons form {
+    flex: 1; /* Кнопки верхнего ряда одинаковой ширины */
+}
+
+button, .btn {
+    width: 100%; /* Растягивает кнопки на всю ширину контейнера */
+    text-align: center; /* Центрирует текст */
+}
+
+.buy-button {
+    margin-top: auto; /* Кнопка "Купить" находится внизу */
+}
+
+.buy-button .btn-primary {
+    width: 100%; /* Кнопка "Купить" также занимает всю ширину */
+    padding: 10px; /* Отступы для более крупной кнопки */
+    font-size: 16px; /* Немного увеличиваем шрифт для кнопки */
+}
