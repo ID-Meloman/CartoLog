@@ -34,8 +34,8 @@
                 <tr><td>Объем двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_capacity|default:"Не указано" }} л</td>{% endfor %}</tr>
                 <tr><td>Лошадиные силы</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.horsepower|default:"Не указано" }}</td>{% endfor %}</tr>
                 <tr><td>Крутящий момент</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.torque|default:"Не указано" }} Н/м</td>{% endfor %}</tr>
-                <tr><td>Расход по городу</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_city|default:"Не указано" }} л</td>{% endfor %}</tr>
-                <tr><td>Расход по трассе</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_highway|default:"Не указано" }} л</td>{% endfor %}</tr>
+                <tr><td>Расход по городу</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_city|default:"Не указано" }} л/100км</td>{% endfor %}</tr>
+                <tr><td>Расход по трассе</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_highway|default:"Не указано" }} л/100км</td>{% endfor %}</tr>
                 <tr><td>Экологический класс</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.emissions_class|default:"Не указано" }} </td>{% endfor %}</tr>
 
                 <!-- Transmission and Drive -->
