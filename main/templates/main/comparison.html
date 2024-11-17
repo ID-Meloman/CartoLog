@@ -31,12 +31,12 @@
   <tbody>
                 <!-- Engine Specs -->
                 <tr><td>Тип двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_type|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Объем двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_capacity|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Объем двигателя</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.engine_capacity|default:"Не указано" }} л</td>{% endfor %}</tr>
                 <tr><td>Лошадиные силы</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.horsepower|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Крутящий момент</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.torque|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Расход по городу</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_city|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Расход по трассе</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_highway|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Экологический класс</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.emissions_class|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Крутящий момент</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.torque|default:"Не указано" }} Н/м</td>{% endfor %}</tr>
+                <tr><td>Расход по городу</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_city|default:"Не указано" }} л</td>{% endfor %}</tr>
+                <tr><td>Расход по трассе</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.fuel_consumption_highway|default:"Не указано" }} л</td>{% endfor %}</tr>
+                <tr><td>Экологический класс</td>{% for car in comparisons %}<td>{{ car.configuration.technical_specs.emissions_class|default:"Не указано" }} </td>{% endfor %}</tr>
 
                 <!-- Transmission and Drive -->
                 <tr><td>Коробка передач</td>{% for car in comparisons %}<td>{{ car.configuration.transmission_drive.transmission|default:"Не указано" }}</td>{% endfor %}</tr>
@@ -73,7 +73,7 @@
 
                 <!-- Multimedia -->
                 <tr><td>Мультимедиа</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.name|default:"Не указано" }}</td>{% endfor %}</tr>
-                <tr><td>Размер экрана</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.screen_size|default:"Не указано" }}</td>{% endfor %}</tr>
+                <tr><td>Размер экрана</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.screen_size|default:"Не указано" }} дюймов</td>{% endfor %}</tr>
                 <tr><td>Навигатор</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.navigator|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
                 <tr><td>Bluetooth</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.bluetooth|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
                 <tr><td>Wi-Fi</td>{% for car in comparisons %}<td>{{ car.configuration.multimedia_connectivity.wifi|yesno:"Да,Нет" }}</td>{% endfor %}</tr>
