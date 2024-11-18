@@ -1,0 +1,52 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %} AAA {% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'main/css/calculator.css' %}">
+{% endblock %}
+
+
+{% block body %}
+{% include 'main/header.html' %}
+
+<div class="container">
+    <h1>Car Cost Calculator</h1>
+    <div class="form-group">
+        <label for="carCost">Стоимость автомобиля (в год):</label>
+        <input type="number" id="carCost" placeholder="Введите стоимость автомобиля">
+    </div>
+    <div class="form-group">
+        <label for="insurance">Стоимость страховки (в год):</label>
+        <input type="number" id="insurance" placeholder="Введите стоимость страховки">
+    </div>
+    <div class="form-group">
+        <label for="fuel">Стоимость бензина (в год):</label>
+        <input type="number" id="fuel" placeholder="Введите стоимость бензина">
+    </div>
+    <div class="form-group">
+        <label for="maintenance">Стоимость техосмотра (в год):</label>
+        <input type="number" id="maintenance" placeholder="Введите стоимость техосмотра">
+    </div>
+    <button onclick="calculateTotal()">Рассчитать</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateTotal() {
+        // Получение данных из полей ввода
+        const carCost = parseFloat(document.getElementById('carCost').value) || 0;
+        const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+        const fuel = parseFloat(document.getElementById('fuel').value) || 0;
+        const maintenance = parseFloat(document.getElementById('maintenance').value) || 0;
+
+        // Расчёт общей стоимости
+        const totalCost = carCost + insurance + fuel + maintenance;
+
+        // Отображение результата
+        document.getElementById('result').innerText = `Общая стоимость за год: ${totalCost.toLocaleString()} руб.`;
+    }
+</script>
+
+{% endblock %}

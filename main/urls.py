@@ -5,7 +5,7 @@ from django.urls import path
 from . import views
 from .views import (popular, form_newmodel, CarDetail, CarDelete, CarUpdate, filter_cars, favorites,
                     get_models_by_brand, registration_user_form, login_user, info_user, comparison_view,
-                    toggle_comparison, CarCheckView, search_cars)
+                    toggle_comparison, CarCheckView, search_cars, calculator)
 
 urlpatterns = [
     path('', popular, name='popular_page'),
@@ -29,7 +29,7 @@ urlpatterns = [
     path('comparison/remove/<int:car_id>/', views.remove_comparison, name='remove_comparison'),
     path('car/<int:car_id>/check/', CarCheckView.as_view(), name='car_check'),
     path('api/search/', search_cars, name='search_cars'),
-
+    path('calculator/', calculator, name='calculator'),
 ]
 
 if settings.DEBUG:

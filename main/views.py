@@ -8,6 +8,11 @@ from main.models import Car, CarModel, Brand, Person, TransmissionDrive, CarInSh
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 
+
+def calculator(request):
+    return render(request, 'calculate/calculator.html')
+
+
 class CarCheckView(ListView):
     model = CarInShowroom
     template_name = 'main/car_check.html'
@@ -24,6 +29,7 @@ class CarCheckView(ListView):
         # Передаем также объект автомобиля для заголовка или другой информации
         context['car'] = Car.objects.get(id=self.kwargs['car_id'])
         return context
+
 
 def info_user(request):
     # Проверяем, авторизован ли пользователь
@@ -249,8 +255,6 @@ class CarDetail(DetailView):
         return context
 
 
-
-
 def get_models_by_brand(request):
     brand_id = request.GET.get('brand_id')
     models = CarModel.objects.filter(brand_id=brand_id).values('id', 'name')
@@ -296,7 +300,6 @@ def toggle_comparison(request, car_id):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-
 def remove_comparison(request, car_id):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -314,6 +317,7 @@ def remove_comparison(request, car_id):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
 
 def search_cars(request):
     query = request.GET.get('q', '')
