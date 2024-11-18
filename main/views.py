@@ -7,7 +7,7 @@ from django.views.generic import DetailView, DeleteView, UpdateView, ListView
 from main.models import Car, CarModel, Brand, Person, TransmissionDrive, CarInShowroom
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
-
+from bs4 import BeautifulSoup
 
 def calculator(request):
     return render(request, 'calculate/calculator.html')
@@ -337,5 +337,4 @@ def search_cars(request):
     else:
         results = []
     return JsonResponse({'results': results})
-
 
