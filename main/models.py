@@ -217,6 +217,8 @@ class Showroom(models.Model):
     address = models.CharField(max_length=50, verbose_name='Адрес')
     contact = models.CharField(max_length=15, verbose_name='Контакт автосалона')
     website = models.CharField(max_length=50, verbose_name='Сайт автосалона')
+    latitude = models.FloatField(verbose_name='Широта', null=True, blank=True)
+    longitude = models.FloatField(verbose_name='Долгота', null=True, blank=True)
     dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE, verbose_name='Дилер')
 
     def __str__(self):
