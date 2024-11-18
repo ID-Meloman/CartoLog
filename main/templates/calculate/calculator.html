@@ -1,56 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор стоимости владения авто</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block body %}
+{% include 'main/header.html' %}
+
+
 <div class="container mt-5">
     <h2 class="text-center">Калькулятор стоимости владения автомобилем</h2>
-    <form id="ownershipForm" class="mt-4">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="price" class="form-label">Цена автомобиля (₽):</label>
-                <input type="number" class="form-control" id="price" required>
-            </div>
-            <div class="col-md-6">
-                <label for="ownership_period" class="form-label">Срок владения (лет):</label>
-                <input type="number" class="form-control" id="ownership_period" required>
-            </div>
-            <div class="col-md-6">
-                <label for="power" class="form-label">Мощность двигателя (л.с.):</label>
-                <input type="number" class="form-control" id="power" required>
-            </div>
-            <div class="col-md-6">
-                <label for="mileage" class="form-label">Годовой пробег (км):</label>
-                <input type="number" class="form-control" id="mileage" required>
-            </div>
-            <div class="col-md-6">
-                <label for="fuel_consumption" class="form-label">Расход топлива (л/100 км):</label>
-                <input type="number" class="form-control" id="fuel_consumption" step="0.1" required>
-            </div>
-            <div class="col-md-6">
-                <label for="fuel_price" class="form-label">Цена топлива (₽/л):</label>
-                <input type="number" class="form-control" id="fuel_price" step="0.1" required>
-            </div>
-            <div class="col-md-6">
-                <label for="maintenance_count" class="form-label">Количество ТО в год:</label>
-                <input type="number" class="form-control" id="maintenance_count" required>
+    <div class="row">
+        <!-- Input Form -->
+        <div class="col-md-6">
+            <form id="ownershipForm" class="mt-4">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="price" class="form-label">Цена автомобиля (₽):</label>
+                        <input type="number" class="form-control" id="price" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="ownership_period" class="form-label">Срок владения (лет):</label>
+                        <input type="number" class="form-control" id="ownership_period" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="power" class="form-label">Мощность двигателя (л.с.):</label>
+                        <input type="number" class="form-control" id="power" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="mileage" class="form-label">Годовой пробег (км):</label>
+                        <input type="number" class="form-control" id="mileage" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="fuel_consumption" class="form-label">Расход топлива (л/100 км):</label>
+                        <input type="number" class="form-control" id="fuel_consumption" step="0.1" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="fuel_price" class="form-label">Цена топлива (₽/л):</label>
+                        <input type="number" class="form-control" id="fuel_price" step="0.1" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="maintenance_count" class="form-label">Количество ТО в год:</label>
+                        <input type="number" class="form-control" id="maintenance_count" required>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-4" id="calculateBtn">Рассчитать</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results -->
+        <div class="col-md-6">
+            <div id="results" class="mt-4 alert alert-info d-none">
+                <h4>Результаты:</h4>
+                <p><strong>Налог в год:</strong> <span id="annual_tax"></span> ₽</p>
+                <p><strong>Расход на топливо в год:</strong> <span id="annual_fuel"></span> ₽</p>
+                <p><strong>Стоимость ТО в год:</strong> <span id="annual_maintenance"></span> ₽</p>
+                <hr>
+                <p><strong>Стоимость владения за год:</strong> <span id="annual_cost"></span> ₽</p>
+                <p><strong>Общая стоимость за <span id="ownership_years"></span> лет:</strong> <span id="total_cost"></span> ₽</p>
             </div>
         </div>
-        <button type="button" class="btn btn-primary mt-4" id="calculateBtn">Рассчитать</button>
-    </form>
-
-    <div id="results" class="mt-5 alert alert-info d-none">
-        <h4>Результаты:</h4>
-        <p><strong>Налог в год:</strong> <span id="annual_tax"></span> ₽</p>
-        <p><strong>Расход на топливо в год:</strong> <span id="annual_fuel"></span> ₽</p>
-        <p><strong>Стоимость ТО в год:</strong> <span id="annual_maintenance"></span> ₽</p>
-        <hr>
-        <p><strong>Стоимость владения за год:</strong> <span id="annual_cost"></span> ₽</p>
-        <p><strong>Общая стоимость за <span id="ownership_years"></span> лет:</strong> <span id="total_cost"></span> ₽</p>
     </div>
 </div>
 
@@ -107,5 +113,5 @@ function calculateTax(power) {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+{% endblock %}
