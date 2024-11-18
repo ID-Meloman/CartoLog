@@ -337,3 +337,5 @@ def search_cars(request):
     else:
         results = []
     return JsonResponse({'results': results})
+
+

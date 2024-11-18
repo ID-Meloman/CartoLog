@@ -313,31 +313,35 @@
 
 
                 <!-- Модальное окно -->
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="imageModalLabel">Увеличенное изображение</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Закрыть"></button>
-                            </div>
-                            <div class="modal-body d-flex justify-content-center align-items-center"
-                                 style="position: relative;">
-                                <button class="btn btn-light position-absolute start-0" onclick="changeImage(-1)">
-                                    &#10094;
-                                </button>
-                                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid modal-img"
-                                     style="max-width: 100%; max-height: 80vh;">
-                                <button class="btn btn-light position-absolute end-0" onclick="changeImage(1)">
-                                    &#10095;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Модальное окно -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Увеличенное изображение</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center" style="position: relative;">
+                <!-- Кнопка "предыдущее изображение" -->
+                <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y"
+                        style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
+                        onclick="changeImage(-1)">
+                    &#10094;
+                </button>
+                <!-- Увеличенное изображение -->
+                <img id="modalImage" src="" alt="Увеличенное изображение" class="img-fluid modal-img"
+                     style="max-width: 100%; max-height: 80vh;">
+                <!-- Кнопка "следующее изображение" -->
+                <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y"
+                        style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
+                        onclick="changeImage(1)">
+                    &#10095;
+                </button>
             </div>
         </div>
+    </div>
+</div>
+
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{% static 'main/js/car_detail.js' %}"></script>
