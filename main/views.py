@@ -223,7 +223,17 @@ def filter_cars(request):
     if horsepower_max:
         cars = cars.filter(configuration__technical_specs__horsepower__lte=horsepower_max)
 
-    return render(request, 'main/car_list_partial.html', {'cars': cars})
+    # Добавляем избранное для текущего пользователя
+    user_id = request.session.get('user_id')
+    favorite_cars = []
+    if user_id:
+        user = Person.objects.get(id=user_id)
+        favorite_cars = user.favorite.all()
+
+    return render(request, 'main/car_list_partial.html', {
+        'cars': cars,
+        'favorite_cars': favorite_cars,
+    })
 
 
 class CarDetail(DetailView):

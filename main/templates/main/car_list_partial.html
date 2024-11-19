@@ -4,8 +4,9 @@
 <!-- Ваши другие стили -->
 {% endblock %}
 
+
 {% for item in cars %}
-<div class="card" style="width: 18rem;">
+<div class="card">
     {% if item.image %}
         <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.model }}">
     {% else %}
@@ -36,6 +37,7 @@
         </div>
     </div>
 {% endfor %}
+
 
 <script>
     $(document).ready(function() {

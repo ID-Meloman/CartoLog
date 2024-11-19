@@ -24,33 +24,36 @@
 
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">{{ car_in_showroom.showroom.name }}</h5>
-                    <p class="card-text">Адрес: {{ car_in_showroom.showroom.address }}</p>
+                    <!-- Добавлено отображение марки, модели и комплектации -->
+                    <h4 class="card-title">Марка: {{ car_in_showroom.car.model.brand.name }} - {{ car_in_showroom.car.model.name }} - {{ car_in_showroom.car.configuration.name }}</h4>
+
+                    <p class="card-text">Адрес: {{ car_in_showroom.showroom.address }} </p>
                     <p class="card-text">Контакт: {{ car_in_showroom.showroom.contact }}</p>
                     <p class="card-text">Количество: {{ car_in_showroom.quantity }}</p>
                     <p class="card-text">Цена: {{ car_in_showroom.price }} руб.</p>
-                    <!-- Кнопка "Перейти на сайт автосалона" под текстом -->
-                    <a href="{{ car_in_showroom.showroom.website }}" target="_blank" class="btn btn-secondary">
-                            Перейти на сайт автосалона
-                        </a>
 
-<!-- Контейнер для карты справа -->
-        <div class="row g-0">
-            <div class="col-md-12 d-flex justify-content-end" style="margin-top: -20px;"> <!-- Добавлен отступ сверху -->
-                <div id="map-{{ forloop.counter }}" style="width: 400px; height: 200px; border: 1px solid #ccc;"></div>
-            </div>
-        </div>
+                    <!-- Контейнер для карты -->
+                    <div class="row g-0">
+                        <div class="col-md-12 d-flex justify-content-end" style="margin-top: -200px;">
+                            <div id="map-{{ forloop.counter }}"
+                                 style="width: 400px; height: 200px; border: 1px solid #ccc;"></div>
+                        </div>
+                        <!-- Кнопка под картой -->
+                        <div class="col-md-12 d-flex justify-content-end" style="margin-top: 10px;">
+                            <a href="{{ car_in_showroom.showroom.website }}"
+                               target="_blank"
+                               class="btn btn-secondary">
+                                Перейти на сайт автосалона
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-
     </div>
     {% empty %}
     <p>Нет данных о наличии для этого автомобиля.</p>
     {% endfor %}
-
-
 </div>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
