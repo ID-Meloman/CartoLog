@@ -29,6 +29,7 @@
                 Коробка передач: {{ car.configuration.transmission_drive.transmission }}<br>
                 Тип привода: {{ car.configuration.transmission_drive.drive_type }}
             </p>
+            <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">Подробнее</a>
             <button class="btn btn-danger remove-favorite" data-car-id="{{ car.id }}">Убрать из избранного</button>
         </div>
     </div>
