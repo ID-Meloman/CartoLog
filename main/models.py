@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Car12(models.Model):
     title = models.CharField(max_length=255)
-    price = models.CharField(max_length=100, blank=True, null=True)
+    horsepower = models.CharField(max_length=100, blank=True, null=True)
     url = models.URLField()
 
     def __str__(self):
