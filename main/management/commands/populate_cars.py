@@ -15,7 +15,7 @@ class Command(BaseCommand):
         self.stdout.write("Начинаю парсинг автомобилей с TTS.ru...")
 
         # Генерируем случайные 100 ID для парсинга
-        num_pages = 100
+        num_pages = 10
         id_range = (1790000, 1810000)  # Пример диапазона ID
         random_ids = random.sample(range(*id_range), num_pages)
 
@@ -24,17 +24,28 @@ class Command(BaseCommand):
 
             # Парсим данные с текущей страницы
             car_data = parse_car_page(url)
-            if car_data and 'brand' in car_data:
-                brand_name = car_data['brand']
+
+            # Проверяем, что данные есть и что brand существует
+            if car_data:
+                brand_name = car_data.get('brand', '').strip()  # Используем get для безопасного извлечения значения
+
+                # Если brand_name пустой, логируем ошибку или пропускаем эту итерацию
+                if not brand_name:
+                    self.stdout.write(f"Ошибка: бренд не указан для автомобиля с URL: {url}")
+                    continue  # Пропускаем текущую итерацию, если бренд не найден
+
+                # Ищем бренд в базе данных
                 brand = Brand.objects.filter(name__iexact=brand_name).first()
 
-            if brand:
-                model_name = car_data['model']
-                car_model = self.save_model(brand, model_name)
-
-                # После сохранения модели автомобиля создаём конфигурацию
-                if car_model:
-                    self.save_full_configuration(car_model, car_data)
+                # Если бренд найден, продолжаем работу с моделью
+                if brand:
+                    model_name = car_data.get('model',
+                                              'Неизвестная модель')  # Если модель не указана, используем значение по умолчанию
+                    car_model = self.save_model(brand, model_name)
+                    if car_model:
+                        self.save_full_configuration(car_model, car_data)
+                else:
+                    self.stdout.write(f"Бренд '{brand_name}' не найден в базе данных. Пропускаем автомобиль.")
 
     def save_model(self, brand, model_name):
         car_model, created = CarModel.objects.get_or_create(
@@ -58,48 +69,48 @@ class Command(BaseCommand):
             'fuel_consumption_highway': car_data['fuel_consumption_highway'],
             'emissions_class': car_data['emissions_class'],
         }
-        technical_specs = TechnicalSpecs.objects.create(**specs_data)
+        technical_specs = TechnicalSpecs.objects.get_or_create(**specs_data)
 
         transmission_data = {
             'transmission': car_data['transmission'],
             'gears_count': car_data['gears_count'],
             'drive_type': car_data['drive_type'],
         }
-        transmission_drive = TransmissionDrive.objects.create(**transmission_data)
+        transmission_drive = TransmissionDrive.objects.get_or_create(**transmission_data)
 
         suspension_data = {
             'front_suspension': "Независимая",
             'rear_suspension': "Полузависимая",
             'front_brakes': "Дисковые",
-            'rear_brakes': "Барабанные",
+            'rear_brakes': "Дисковые",
         }
-        suspension_brakes = SuspensionBrakes.objects.create(**suspension_data)
+        suspension_brakes = SuspensionBrakes.objects.get_or_create(**suspension_data)
 
         safety_data = {
-            'airbags_count': 6,
-            'abs': True,
-            'esp': True,
-            'traction_control': True,
-            'lane_assist': True,
-            'blind_spot_monitoring': True,
-            'adaptive_cruise_control': True,
+            'airbags_count': car_data['airbags_count'],
+            'abs': car_data['abs'],
+            'esp': car_data['esp'],
+            'traction_control': car_data['traction_control'],
+            'lane_assist': car_data['lane_assist'],
+            'blind_spot_monitoring': car_data['blind_spot_monitoring'],
+            'adaptive_cruise_control': car_data['adaptive_cruise_control'],
         }
-        safety_features = SafetyFeatures.objects.create(**safety_data)
+        safety_features = SafetyFeatures.objects.get_or_create(**safety_data)
 
         comfort_data = {
             'name': f"{car_model.name} Comfort",
-            'climate_control': True,
-            'climate_zones': 2,
-            'seat_material': "Кожа",
-            'front_seat_heating': True,
-            'rear_seat_heating': True,
-            'seat_ventilation': True,
-            'panoramic_roof': False,
-            'sunroof': True,
-            'electric_adjustments_seat': True,
-            'seat_adjustment_positions': 8,
+            'climate_control': car_data['climate_control'],
+            'climate_zones': car_data['climate_zones'],
+            'seat_material': car_data['seat_material'],
+            'front_seat_heating': car_data['front_seat_heating'],
+            'rear_seat_heating': car_data['rear_seat_heating'],
+            'seat_ventilation': car_data['seat_ventilation'],
+            'panoramic_roof': car_data['panoramic_roof'],
+            'sunroof': car_data['sunroof'],
+            'electric_adjustments_seat': car_data['electric_adjustments_seat'],
+            'seat_adjustment_positions': car_data['seat_adjustment_positions'],
         }
-        comfort = Comfort.objects.create(**comfort_data)
+        comfort = Comfort.objects.get_or_create(**comfort_data)
 
         multimedia_data = {
             'name': f"{car_model.name} Multimedia",
@@ -112,19 +123,19 @@ class Command(BaseCommand):
             'apple_carplay': True,
             'android_auto': True,
         }
-        multimedia_connectivity = MultimediaConnectivity.objects.create(**multimedia_data)
+        multimedia_connectivity = MultimediaConnectivity.objects.get_or_create(**multimedia_data)
 
         options_data = {
-            'tow_bar': False,
-            'adaptive_suspension': False,
-            'remote_start': True,
-            'parking_assistance': True,
-            'camera_360': True,
+            'tow_bar': car_data['tow_bar'],
+            'adaptive_suspension': car_data['adaptive_suspension'],
+            'remote_start': car_data['remote_start'],
+            'parking_assistance': car_data['parking_assistance'],
+            'camera_360': car_data['camera_360'],
         }
-        additional_options = AdditionalOptions.objects.create(**options_data)
+        additional_options = AdditionalOptions.objects.get_or_create(**options_data)
 
         # Создаём конфигурацию
-        configuration = Configuration.objects.create(
+        configuration = Configuration.objects.get_or_create(
             name=f"{car_model.name} Configuration",
             technical_specs=technical_specs,
             transmission_drive=transmission_drive,
@@ -136,15 +147,15 @@ class Command(BaseCommand):
         )
 
         # Создаём запись автомобиля
-        car = Car.objects.create(
+        car = Car.objects.get_or_create(
             model=car_model,
             configuration=configuration,
-            color="Белый",
-            wheel_size=17.0,
-            led_headlights=True,
-            fog_lights=True,
-            tinted_windows=False,
-            roof_rails=True,
+            color= car_data['color'],
+            wheel_size= car_data['wheel_size'],
+            led_headlights= car_data['led_headlights'],
+            fog_lights= car_data['fog_lights'],
+            tinted_windows=car_data['tinted_windows'],
+            roof_rails=car_data['roof_rails'],
         )
 
         self.stdout.write(f"Автомобиль {car_model.name} успешно добавлен с конфигурацией {configuration.name}")
