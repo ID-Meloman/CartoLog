@@ -20,14 +20,16 @@ class Command(BaseCommand):
         random_ids = random.sample(range(*id_range), num_pages)
 
         for auto_id in random_ids:
-            url = f"https://www.tts.ru/auto/detail.php?auto={auto_id}"
+#            url = f"https://www.tts.ru/auto/detail.php?auto={auto_id}"
+            url = f"https://www.tts.ru/auto/detail.php?auto=1806975"
 
             # Парсим данные с текущей страницы
             car_data = parse_car_page(url)
+            print(car_data)
 
             # Проверяем, что данные есть и что brand существует
             if car_data:
-                brand_name = car_data.get('brand', '').strip()  # Используем get для безопасного извлечения значения
+                brand_name = car_data['brand']
 
                 # Если brand_name пустой, логируем ошибку или пропускаем эту итерацию
                 if not brand_name:
