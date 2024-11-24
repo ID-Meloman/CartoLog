@@ -84,7 +84,8 @@
         <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
         {% endif %}
         <div class="card-body">
-            <h5 class="card-title">{{ item.model }}</h5>
+                        <h5 class="card-title">{{ item.model }} - {{ item.configuration.name }}</h5>
+
             <p class="card-text">
                 Лошадиные силы: {{ item.configuration.technical_specs.horsepower }} л.с.<br>
                 Крутящий момент: {{ item.configuration.technical_specs.torque }} Нм<br>
