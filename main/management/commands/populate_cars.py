@@ -15,13 +15,12 @@ class Command(BaseCommand):
         self.stdout.write("Начинаю парсинг автомобилей с TTS.ru...")
 
         # Генерируем случайные 100 ID для парсинга
-        num_pages = 10
+        num_pages = 100
         id_range = (1790000, 1810000)  # Пример диапазона ID
         random_ids = random.sample(range(*id_range), num_pages)
 
         for auto_id in random_ids:
-#            url = f"https://www.tts.ru/auto/detail.php?auto={auto_id}"
-            url = f"https://www.tts.ru/auto/detail.php?auto=1806975"
+            url = f"https://www.tts.ru/auto/detail.php?auto={auto_id}"
 
             # Парсим данные с текущей страницы
             car_data = parse_car_page(url)
@@ -71,14 +70,14 @@ class Command(BaseCommand):
             'fuel_consumption_highway': car_data['fuel_consumption_highway'],
             'emissions_class': car_data['emissions_class'],
         }
-        technical_specs = TechnicalSpecs.objects.get_or_create(**specs_data)
+        technical_specs, created = TechnicalSpecs.objects.get_or_create(**specs_data)
 
         transmission_data = {
             'transmission': car_data['transmission'],
             'gears_count': car_data['gears_count'],
             'drive_type': car_data['drive_type'],
         }
-        transmission_drive = TransmissionDrive.objects.get_or_create(**transmission_data)
+        transmission_drive, created = TransmissionDrive.objects.get_or_create(**transmission_data)
 
         suspension_data = {
             'front_suspension': "Независимая",
@@ -86,7 +85,7 @@ class Command(BaseCommand):
             'front_brakes': "Дисковые",
             'rear_brakes': "Дисковые",
         }
-        suspension_brakes = SuspensionBrakes.objects.get_or_create(**suspension_data)
+        suspension_brakes, created = SuspensionBrakes.objects.get_or_create(**suspension_data)
 
         safety_data = {
             'airbags_count': car_data['airbags_count'],
@@ -97,7 +96,7 @@ class Command(BaseCommand):
             'blind_spot_monitoring': car_data['blind_spot_monitoring'],
             'adaptive_cruise_control': car_data['adaptive_cruise_control'],
         }
-        safety_features = SafetyFeatures.objects.get_or_create(**safety_data)
+        safety_features, created = SafetyFeatures.objects.get_or_create(**safety_data)
 
         comfort_data = {
             'name': f"{car_model.name} Comfort",
@@ -112,7 +111,7 @@ class Command(BaseCommand):
             'electric_adjustments_seat': car_data['electric_adjustments_seat'],
             'seat_adjustment_positions': car_data['seat_adjustment_positions'],
         }
-        comfort = Comfort.objects.get_or_create(**comfort_data)
+        comfort, created = Comfort.objects.get_or_create(**comfort_data)
 
         multimedia_data = {
             'name': f"{car_model.name} Multimedia",
@@ -125,7 +124,7 @@ class Command(BaseCommand):
             'apple_carplay': True,
             'android_auto': True,
         }
-        multimedia_connectivity = MultimediaConnectivity.objects.get_or_create(**multimedia_data)
+        multimedia_connectivity, created = MultimediaConnectivity.objects.get_or_create(**multimedia_data)
 
         options_data = {
             'tow_bar': car_data['tow_bar'],
@@ -134,10 +133,10 @@ class Command(BaseCommand):
             'parking_assistance': car_data['parking_assistance'],
             'camera_360': car_data['camera_360'],
         }
-        additional_options = AdditionalOptions.objects.get_or_create(**options_data)
+        additional_options, created = AdditionalOptions.objects.get_or_create(**options_data)
 
         # Создаём конфигурацию
-        configuration = Configuration.objects.get_or_create(
+        configuration, created = Configuration.objects.get_or_create(
             name=f"{car_model.name} Configuration",
             technical_specs=technical_specs,
             transmission_drive=transmission_drive,
@@ -149,7 +148,7 @@ class Command(BaseCommand):
         )
 
         # Создаём запись автомобиля
-        car = Car.objects.get_or_create(
+        car, created = Car.objects.get_or_create(
             model=car_model,
             configuration=configuration,
             color= car_data['color'],
@@ -159,5 +158,7 @@ class Command(BaseCommand):
             tinted_windows=car_data['tinted_windows'],
             roof_rails=car_data['roof_rails'],
         )
+        if created == True:
+            print(f"{car.model} {car.color} добавленна")
 
         self.stdout.write(f"Автомобиль {car_model.name} успешно добавлен с конфигурацией {configuration.name}")
