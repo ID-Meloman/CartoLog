@@ -6,6 +6,7 @@
 }
 
 .card {
+    position: relative;
     width: 20rem;           /* Увеличиваем ширину карточки */
     height: 28rem;          /* Увеличиваем высоту карточки */
     display: flex;          /* Flexbox внутри карточки */
@@ -176,4 +177,32 @@ display: flex;              /* Flexbox for the content */
     opacity: 1;
     display: block;
     z-index: 10;
+}
+
+.favorite-icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10; /* Ensure the icon stays on top of the image */
+    padding: 0; /* Remove any padding around the icon */
+    background: none; /* Ensure no background on the container */
+    border: none; /* Ensure no border around the container */
+}
+
+
+.favorite-icon,
+.non-favorite-icon {
+    background: none;  /* Removes any background */
+    width: auto;        /* Icon will scale according to font size */
+    height: auto;       /* Icon will scale according to font size */
+    display: inline;    /* Ensures the icon is inline with the text */
+    vertical-align: middle;  /* Vertically aligns the icon with the text */
+    border: none;       /* Ensure there's no border around the icon */
+    padding: 0;         /* Ensure no padding around the icon */
+}
+
+/* Optional: Add a hover effect on the heart icon */
+.favorite-icon-container:hover .favorite-icon,
+.favorite-icon-container:hover .non-favorite-icon {
+    opacity: 0.8; /* Slight opacity effect on hover */
 }
