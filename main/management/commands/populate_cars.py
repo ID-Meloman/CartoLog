@@ -24,7 +24,6 @@ class Command(BaseCommand):
 
             # Парсим данные с текущей страницы
             car_data = parse_car_page(url)
-            print(car_data)
 
             # Проверяем, что данные есть и что brand существует
             if car_data:
