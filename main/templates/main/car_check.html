@@ -24,29 +24,21 @@
 
             <div class="col-md-8">
                 <div class="card-body">
-                    <!-- Добавлено отображение марки, модели и комплектации -->
-                    <h4 class="card-title">Марка: {{ car_in_showroom.car.model.brand.name }} - {{ car_in_showroom.car.model.name }} - {{ car_in_showroom.car.configuration.name }}</h4>
+                    <!-- Отображение марки, модели и комплектации -->
+                    <h4 class="card-title">{{ car_in_showroom.car.model.brand.name }} - {{ car_in_showroom.car.model.name }} - {{ car_in_showroom.car.configuration.name }}</h4>
 
-                    <p class="card-text">Адрес: {{ car_in_showroom.showroom.address }} </p>
-                    <p class="card-text">Контакт: {{ car_in_showroom.showroom.contact }}</p>
-                    <p class="card-text">Количество: {{ car_in_showroom.quantity }}</p>
-                    <p class="card-text">Цена: {{ car_in_showroom.price }} руб.</p>
-
-                    <!-- Контейнер для карты -->
-                    <div class="row g-0">
-                        <div class="col-md-12 d-flex justify-content-end" style="margin-top: -200px;">
-                            <div id="map-{{ forloop.counter }}"
-                                 style="width: 400px; height: 200px; border: 1px solid #ccc;"></div>
-                        </div>
-                        <!-- Кнопка под картой -->
-                        <div class="col-md-12 d-flex justify-content-end" style="margin-top: 10px;">
-                            <a href="{{ car_in_showroom.showroom.website }}"
-                               target="_blank"
-                               class="btn btn-secondary">
-                                Перейти на сайт автосалона
-                            </a>
-                        </div>
-                    </div>
+                    <!-- Отображение информации об автосалонах с ценами -->
+                    <h5 class="card-text">Цена:</h5>
+                    <ul>
+                        {% for showroom_info in car_in_showroom_list %}
+                        <li>
+                            <strong>{{ showroom_info.showroom.name }}</strong>:
+                            <a href="{{ showroom_info.url }}" target="_blank">{{ showroom_info.price }} руб.</a>
+                            <p>Адрес: {{ showroom_info.showroom.address }}</p>
+                            <p>Контакт: {{ showroom_info.showroom.contact }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -55,36 +47,5 @@
     <p>Нет данных о наличии для этого автомобиля.</p>
     {% endfor %}
 </div>
-
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        {% for car_in_showroom in car_in_showroom_list %}
-        ymaps.ready(function() {
-            // Проверка и замена запятой на точку в координатах
-            var latitude = "{{ car_in_showroom.showroom.latitude }}".replace(',', '.');
-            var longitude = "{{ car_in_showroom.showroom.longitude }}".replace(',', '.');
-
-            // Логирование координат для проверки
-            console.log("Широта: " + latitude + ", Долгота: " + longitude);
-
-            // Создаем карту с исправленными координатами
-            var map{{ forloop.counter }} = new ymaps.Map("map-{{ forloop.counter }}", {
-                center: [latitude, longitude],
-                zoom: 16
-            });
-
-            // Добавление метки
-            var placemark{{ forloop.counter }} = new ymaps.Placemark([latitude, longitude], {
-                hintContent: "{{ car_in_showroom.showroom.name }}",
-                balloonContent: "Адрес: {{ car_in_showroom.showroom.address }}"
-            });
-
-            map{{ forloop.counter }}.geoObjects.add(placemark{{ forloop.counter }});
-        });
-        {% endfor %}
-    });
-</script>
 
 {% endblock %}

@@ -234,12 +234,14 @@ class CarInShowroom(models.Model):
     showroom = models.ForeignKey(Showroom, on_delete=models.CASCADE, verbose_name='Автосалон')
     quantity = models.IntegerField(verbose_name='Количество в наличии')
     price = models.IntegerField(verbose_name='Цена')
+    url = models.URLField(verbose_name='Ссылка на автомобиль в автосалоне', blank=True, null=True)  # Новое поле
 
     def __str__(self):
         return f'{self.car} - {self.showroom} - {self.quantity}'
 
     class Meta:
         verbose_name = 'Машины в наличии'
+        verbose_name_plural = 'Машины в наличии'
 
 
 class Person(models.Model):
