@@ -4,3 +4,23 @@
     object-fit: cover; /* Подгон изображения, чтобы оно полностью заполнило контейнер */
     border-radius: 8px; /* Добавление скругленных углов */
 }
+.card {
+    border-radius: 12px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.list-group-item {
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa; /* Светлый фон для элемента списка */
+    border-radius: 8px;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef; /* Подсветка при наведении */
+}
