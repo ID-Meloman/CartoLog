@@ -206,3 +206,9 @@ display: flex;              /* Flexbox for the content */
 .favorite-icon-container:hover .non-favorite-icon {
     opacity: 0.8; /* Slight opacity effect on hover */
 }
+.favorite-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
