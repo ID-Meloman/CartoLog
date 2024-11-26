@@ -1,3 +1,5 @@
+import requests
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from main.scripts.car_parser import parse_car_page
 from main.models import (
@@ -157,7 +159,26 @@ class Command(BaseCommand):
             tinted_windows=car_data['tinted_windows'],
             roof_rails=car_data['roof_rails'],
         )
+        # Сохраняем изображения
+        image_fields = [
+            'image',  # Общее изображение
+            'image_front',  # Изображение спереди
+            'image_side',  # Изображение сбоку
+            'image_back',  # Изображение сзади
+            'image_interior'  # Изображение внутри
+        ]
         if created == True:
-            print(f"{car.model} {car.color} добавленна")
+            # Убедитесь, что `car_data['images']` содержит список ссылок на изображения
+            for i, image_url in enumerate(car_data.get('images', [])[:5]):
+                img_response = requests.get(image_url)
+                img_response.raise_for_status()  # Проверяем успешность загрузки изображения
 
-        self.stdout.write(f"Автомобиль {car_model.name} успешно добавлен с конфигурацией {configuration.name}")
+                # Сохраняем изображение в соответствующее поле
+                field_name = image_fields[i]
+                file_name = image_url.split('/')[-1]  # Получаем имя файла из URL
+                getattr(car, field_name).save(file_name, ContentFile(img_response.content), save=False)
+
+            # Сохраняем изменения в объекте модели
+            car.save()
+
+            print(f"Автомобиль {car_model.name} успешно добавлен с конфигурацией {configuration.name}")

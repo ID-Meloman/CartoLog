@@ -273,6 +273,15 @@ def parse_car_page(url):
             car_data['tinted_windows'] = tinted_windows
             car_data['roof_rails'] = roof_rails
 
+            # Ищем элементы <a> с классом, содержащим "lightgallery__item"
+            image_elements = soup.select('a.lightgallery__item')
+            # Извлекаем ссылки на изображения
+            image_urls = [element['href'] for element in image_elements if 'href' in element.attrs]
+            # Оставляем только первые пять изображений
+            image_urls = image_urls[:5]
+            # Сохраняем ссылки на изображения в car_data['images']
+            car_data['images'] = image_urls
+
             return car_data
 
         else:
