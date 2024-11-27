@@ -13,8 +13,35 @@
             <form id="ownershipForm" class="mt-4">
                 <div class="row g-3">
                     <div class="col-md-12">
+                        <label class="form-label">Тип расчёта:</label>
+                        <div>
+                            <input type="radio" id="calculationTypePrice" name="calculationType" value="price" checked>
+                            <label for="calculationTypePrice">Обычная стоимость</label>
+                            <input type="radio" id="calculationTypeLoan" name="calculationType" value="loan">
+                            <label for="calculationTypeLoan">Кредит</label>
+                        </div>
+                    </div>
+
+                    <!-- Поля для расчета обычной стоимости -->
+                    <div id="priceFields" class="col-md-12">
                         <label for="price" class="form-label">Цена автомобиля (₽):</label>
-                        <input type="number" class="form-control" id="price" required>
+                        <input type="number" class="form-control" id="price">
+                    </div>
+
+                    <!-- Поля для расчета кредита -->
+                    <div id="loanFields" class="d-none">
+                        <div class="col-md-12">
+                            <label for="loan_amount" class="form-label">Сумма кредита (₽):</label>
+                            <input type="number" class="form-control" id="loan_amount">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="interest_rate" class="form-label">Процентная ставка (% годовых):</label>
+                            <input type="number" class="form-control" id="interest_rate" step="0.1">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="loan_term" class="form-label">Срок кредита (лет):</label>
+                            <input type="number" class="form-control" id="loan_term">
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <label for="ownership_period" class="form-label">Срок владения (лет):</label>
@@ -37,6 +64,10 @@
                         <input type="number" class="form-control" id="fuel_price" step="0.1" required>
                     </div>
                     <div class="col-md-12">
+                        <label for="maintenance_price" class="form-label">Средняя стоимость одного ТО:</label>
+                        <input type="number" class="form-control" id="maintenance_price" required>
+                    </div>
+                    <div class="col-md-12">
                         <label for="maintenance_count" class="form-label">Количество ТО в год:</label>
                         <input type="number" class="form-control" id="maintenance_count" required>
                     </div>
@@ -52,64 +83,129 @@
                 <p><strong>Налог в год:</strong> <span id="annual_tax"></span> ₽</p>
                 <p><strong>Расход на топливо в год:</strong> <span id="annual_fuel"></span> ₽</p>
                 <p><strong>Стоимость ТО в год:</strong> <span id="annual_maintenance"></span> ₽</p>
+                <p id="loan_payments_row" class="d-none">
+                    <strong>Годовые выплаты по кредиту:</strong> <span id="annual_loan_payments"></span> ₽
+                </p>
                 <hr>
                 <p><strong>Стоимость владения за год:</strong> <span id="annual_cost"></span> ₽</p>
-                <p><strong>Общая стоимость за <span id="ownership_years"></span> лет:</strong> <span id="total_cost"></span> ₽</p>
+                <p><strong>Общая стоимость за <span id="ownership_years"></span> лет:</strong> <span
+                        id="total_cost"></span> ₽</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Функция расчёта транспортного налога
+    const calculationTypePrice = document.getElementById('calculationTypePrice');
+const calculationTypeLoan = document.getElementById('calculationTypeLoan');
+const priceFields = document.getElementById('priceFields');
+const loanFields = document.getElementById('loanFields');
+
+// Обработчик переключателя
+calculationTypePrice.addEventListener('change', () => {
+    priceFields.classList.remove('d-none');
+    loanFields.classList.add('d-none');
+});
+
+calculationTypeLoan.addEventListener('change', () => {
+    loanFields.classList.remove('d-none');
+    priceFields.classList.add('d-none');
+});
+
+// Функция расчёта транспортного налога
 function calculateTax(power) {
     if (power > 0 && power <= 100) return 2.5 * power * 12;
     if (power > 100 && power <= 150) return 3.5 * power * 12;
     if (power > 150 && power <= 200) return 5 * power * 12;
     if (power > 200 && power <= 250) return 7.5 * power * 12;
     if (power >= 250) return 15 * power * 12;
-    return 15 * power * 12;
+    return 0;
 }
 
-    // Функция расчёта стоимости ТО
-    function calculateMaintenanceCost(price) {
-        if (price <= 500000) return 7500;
-        if (price <= 1000000) return 15000;
-        if (price <= 2000000) return 30000;
-        if (price <= 3000000) return 45000;
-        return 60000;
+
+// Функция расчёта ежемесячного платежа по кредиту
+function calculateMonthlyPayment(loanAmount, interestRate, loanTerm) {
+    const monthlyRate = interestRate / 100 / 12;
+    const numberOfPayments = loanTerm * 12;
+    return (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -numberOfPayments));
+}
+
+// Основной расчёт
+document.getElementById('calculateBtn').addEventListener('click', () => {
+    // Получение значений с формы
+    const ownershipPeriod = parseInt(document.getElementById('ownership_period').value);
+    const power = parseInt(document.getElementById('power').value);
+    const mileage = parseInt(document.getElementById('mileage').value);
+    const fuelConsumption = parseFloat(document.getElementById('fuel_consumption').value);
+    const fuelPrice = parseFloat(document.getElementById('fuel_price').value);
+    const maintenancePrice = parseInt(document.getElementById('maintenance_price').value);
+    const maintenanceCount = parseInt(document.getElementById('maintenance_count').value);
+
+    let tax = 0, annualFuelCost = 0, maintenanceCost = 0, annualCost = 0, annualLoanCost = 0;
+
+    if (calculationTypePrice.checked) {
+        // Расчет для обычной стоимости
+        const price = parseInt(document.getElementById('price').value);
+        if (!validateInputs([ownershipPeriod, power, mileage, fuelConsumption, fuelPrice, maintenanceCount, price])) {
+            alert("Пожалуйста, заполните все поля.");
+            return;
+        }
+        maintenanceCost = fuelPrice * maintenanceCount;
+        tax = calculateTax(power);
+        annualFuelCost = (mileage / 100) * fuelConsumption * fuelPrice;
+
+        annualCost = tax + annualFuelCost + maintenanceCost;
+    } else if (calculationTypeLoan.checked) {
+        // Расчет для кредита
+        const loanAmount = parseInt(document.getElementById('loan_amount').value);
+        const interestRate = parseFloat(document.getElementById('interest_rate').value);
+        const loanTerm = parseInt(document.getElementById('loan_term').value);
+        if (!validateInputs([ownershipPeriod, power, mileage, fuelConsumption, fuelPrice, maintenanceCount, loanAmount, interestRate, loanTerm])) {
+            alert("Пожалуйста, заполните все поля.");
+            return;
+        }
+        const monthlyPayment = calculateMonthlyPayment(loanAmount, interestRate, loanTerm);
+        annualLoanCost = monthlyPayment * 12;
+
+        maintenanceCost = maintenancePrice * maintenanceCount;
+        tax = calculateTax(power);
+        annualFuelCost = (mileage / 100) * fuelConsumption * fuelPrice;
+
+        annualCost = tax + annualFuelCost + maintenanceCost + annualLoanCost;
     }
 
-    // Основной расчёт
-    document.getElementById('calculateBtn').addEventListener('click', () => {
-        // Получение значений с формы
-        const price = parseInt(document.getElementById('price').value);
-        const ownershipPeriod = parseInt(document.getElementById('ownership_period').value);
-        const power = parseInt(document.getElementById('power').value);
-        const mileage = parseInt(document.getElementById('mileage').value);
-        const fuelConsumption = parseFloat(document.getElementById('fuel_consumption').value);
-        const fuelPrice = parseFloat(document.getElementById('fuel_price').value);
-        const maintenanceCount = parseInt(document.getElementById('maintenance_count').value);
+    const totalCost = annualCost * ownershipPeriod;
 
-        // Расчёты
-        const maintenanceCost = calculateMaintenanceCost(price) * maintenanceCount;
-        const tax = calculateTax(power);
-        const annualFuelCost = (mileage / 100) * fuelConsumption * fuelPrice;
+    // Вывод результатов
+    document.getElementById('annual_tax').innerText = (tax || 0).toFixed(2);
+    document.getElementById('annual_fuel').innerText = (annualFuelCost || 0).toFixed(2);
+    document.getElementById('annual_maintenance').innerText = (maintenanceCost || 0).toFixed(2);
+    document.getElementById('annual_cost').innerText = (annualCost || 0).toFixed(2);
+    document.getElementById('total_cost').innerText = (totalCost || 0).toFixed(2);
+    document.getElementById('ownership_years').innerText = ownershipPeriod;
 
-        const annualCost = tax + annualFuelCost + maintenanceCost;
-        const totalCost = annualCost * ownershipPeriod;
+    if (calculationTypeLoan.checked) {
+        document.getElementById('loan_payments_row').classList.remove('d-none');
+        document.getElementById('annual_loan_payments').innerText = annualLoanCost.toFixed(2);
+    } else {
+        document.getElementById('loan_payments_row').classList.add('d-none');
+    }
 
-        // Вывод результатов
-        document.getElementById('annual_tax').innerText = tax.toFixed(2);
-        document.getElementById('annual_fuel').innerText = annualFuelCost.toFixed(2);
-        document.getElementById('annual_maintenance').innerText = maintenanceCost.toFixed(2);
-        document.getElementById('annual_cost').innerText = annualCost.toFixed(2);
-        document.getElementById('total_cost').innerText = totalCost.toFixed(2);
-        document.getElementById('ownership_years').innerText = ownershipPeriod;
+    // Показываем результаты
+    document.getElementById('results').classList.remove('d-none');
+});
 
-        // Показываем результаты
-        document.getElementById('results').classList.remove('d-none');
-    });
+
+// Функция валидации
+function validateInputs(fields) {
+    for (let field of fields) {
+        if (isNaN(field) || field === "" || field === null) {
+            return false;
+        }
+    }
+    return true;
+}
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
