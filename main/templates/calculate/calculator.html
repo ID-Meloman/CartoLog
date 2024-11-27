@@ -16,7 +16,7 @@
                         <label class="form-label">Тип расчёта:</label>
                         <div>
                             <input type="radio" id="calculationTypePrice" name="calculationType" value="price" checked>
-                            <label for="calculationTypePrice">Обычная стоимость</label>
+                            <label for="calculationTypePrice">Оплата сразу</label>
                             <input type="radio" id="calculationTypeLoan" name="calculationType" value="loan">
                             <label for="calculationTypeLoan">Кредит</label>
                         </div>
@@ -68,8 +68,20 @@
                         <input type="number" class="form-control" id="maintenance_price" required>
                     </div>
                     <div class="col-md-12">
+                        <label class="form-label">Расчёт ТО:</label>
+                        <div>
+                            <input type="radio" id="maintenanceTypeCount" name="maintenanceType" value="count" checked>
+                            <label for="maintenanceTypeCount">Количество ТО в год</label>
+                            <input type="radio" id="maintenanceTypeMileage" name="maintenanceType" value="mileage">
+                            <label for="maintenanceTypeMileage">ТО каждые 10,000 км</label>
+                        </div>
+                    </div>
+                    <div id="maintenanceCountFields" class="col-md-12">
                         <label for="maintenance_count" class="form-label">Количество ТО в год:</label>
                         <input type="number" class="form-control" id="maintenance_count" required>
+                    </div>
+                    <div id="maintenanceMileageFields" class="col-md-12 d-none">
+                        <p class="form-text">ТО будет рассчитано автоматически на основе пробега.</p>
                     </div>
                     <button type="button" class="btn btn-primary mt-4" id="calculateBtn">Рассчитать</button>
                 </div>
@@ -100,6 +112,21 @@
 const calculationTypeLoan = document.getElementById('calculationTypeLoan');
 const priceFields = document.getElementById('priceFields');
 const loanFields = document.getElementById('loanFields');
+const maintenanceTypeCount = document.getElementById('maintenanceTypeCount');
+const maintenanceTypeMileage = document.getElementById('maintenanceTypeMileage');
+const maintenanceCountFields = document.getElementById('maintenanceCountFields');
+const maintenanceMileageFields = document.getElementById('maintenanceMileageFields');
+
+// Обработчик переключателя
+maintenanceTypeCount.addEventListener('change', () => {
+    maintenanceCountFields.classList.remove('d-none');
+    maintenanceMileageFields.classList.add('d-none');
+});
+
+maintenanceTypeMileage.addEventListener('change', () => {
+    maintenanceMileageFields.classList.remove('d-none');
+    maintenanceCountFields.classList.add('d-none');
+});
 
 // Обработчик переключателя
 calculationTypePrice.addEventListener('change', () => {
@@ -139,7 +166,20 @@ document.getElementById('calculateBtn').addEventListener('click', () => {
     const fuelConsumption = parseFloat(document.getElementById('fuel_consumption').value);
     const fuelPrice = parseFloat(document.getElementById('fuel_price').value);
     const maintenancePrice = parseInt(document.getElementById('maintenance_price').value);
-    const maintenanceCount = parseInt(document.getElementById('maintenance_count').value);
+
+    let maintenanceCount = 0;
+
+    if (maintenanceTypeCount.checked) {
+        // Пользователь указал количество ТО за год
+        maintenanceCount = parseInt(document.getElementById('maintenance_count').value);
+        if (!validateInputs([maintenanceCount])) {
+            alert("Пожалуйста, заполните все поля.");
+            return;
+        }
+    } else if (maintenanceTypeMileage.checked) {
+        // Расчёт ТО каждые 10,000 км
+        maintenanceCount = Math.ceil(mileage / 10000);
+    }
 
     let tax = 0, annualFuelCost = 0, maintenanceCost = 0, annualCost = 0, annualLoanCost = 0;
 
@@ -150,7 +190,7 @@ document.getElementById('calculateBtn').addEventListener('click', () => {
             alert("Пожалуйста, заполните все поля.");
             return;
         }
-        maintenanceCost = fuelPrice * maintenanceCount;
+        maintenanceCost = maintenancePrice * maintenanceCount;
         tax = calculateTax(power);
         annualFuelCost = (mileage / 100) * fuelConsumption * fuelPrice;
 
@@ -177,22 +217,23 @@ document.getElementById('calculateBtn').addEventListener('click', () => {
     const totalCost = annualCost * ownershipPeriod;
 
     // Вывод результатов
-    document.getElementById('annual_tax').innerText = (tax || 0).toFixed(2);
-    document.getElementById('annual_fuel').innerText = (annualFuelCost || 0).toFixed(2);
-    document.getElementById('annual_maintenance').innerText = (maintenanceCost || 0).toFixed(2);
-    document.getElementById('annual_cost').innerText = (annualCost || 0).toFixed(2);
-    document.getElementById('total_cost').innerText = (totalCost || 0).toFixed(2);
-    document.getElementById('ownership_years').innerText = ownershipPeriod;
+document.getElementById('annual_tax').innerText = (tax || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('annual_fuel').innerText = (annualFuelCost || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('annual_maintenance').innerText = (maintenanceCost || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('annual_cost').innerText = (annualCost || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('total_cost').innerText = (totalCost || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('ownership_years').innerText = ownershipPeriod;
 
-    if (calculationTypeLoan.checked) {
-        document.getElementById('loan_payments_row').classList.remove('d-none');
-        document.getElementById('annual_loan_payments').innerText = annualLoanCost.toFixed(2);
-    } else {
-        document.getElementById('loan_payments_row').classList.add('d-none');
-    }
+if (calculationTypeLoan.checked) {
+    document.getElementById('loan_payments_row').classList.remove('d-none');
+    document.getElementById('annual_loan_payments').innerText = annualLoanCost.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+} else {
+    document.getElementById('loan_payments_row').classList.add('d-none');
+}
 
-    // Показываем результаты
-    document.getElementById('results').classList.remove('d-none');
+// Показываем результаты
+document.getElementById('results').classList.remove('d-none');
+
 });
 
 
