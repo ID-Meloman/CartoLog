@@ -16,21 +16,44 @@
 <div class="card-container" id="car-list">
     {% for car in favorite_cars %}
     <div class="card position-relative" style="width: 18rem;" id="car-{{ car.id }}">
+        <!-- Отображение изображения автомобиля -->
         {% if car.image %}
             <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.model }}">
         {% else %}
             <img src="{% static 'main/img/logo.png' %}" class="card-img-top" alt="Default image">
         {% endif %}
+
+        <!-- Контент карточки -->
         <div class="card-body">
-             <h5 class="card-title">{{ car.model }}</h5>
+            <h5 class="card-title">{{ car.model }}</h5>
             <p class="card-text">
                 Лошадиные силы: {{ car.configuration.technical_specs.horsepower }} л.с.<br>
                 Крутящий момент: {{ car.configuration.technical_specs.torque }} Нм<br>
                 Коробка передач: {{ car.configuration.transmission_drive.transmission }}<br>
                 Тип привода: {{ car.configuration.transmission_drive.drive_type }}
             </p>
+
+            <!-- Кнопка Подробнее -->
             <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">Подробнее</a>
-            <button class="btn btn-danger remove-favorite" data-car-id="{{ car.id }}">Убрать из избранного</button>
+
+            <!-- Удаление из избранного -->
+            <!-- Переключатель избранного -->
+            <div class="favorite-icon-container">
+                <form method="POST" action="{% url 'toggle_favorite' car.id %}">
+                    {% csrf_token %}
+                    <button
+                        class="favorite-toggle"
+                        data-car-id="{{ car.id }}"
+                        data-url="{% url 'toggle_favorite' car.id %}">
+                        <svg class="favorite-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 16 16" style="display: inline;">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                        </svg>
+                        <svg class="non-favorite-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 16 16" style="display: none;">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     {% empty %}
@@ -38,30 +61,41 @@
     {% endfor %}
 </div>
 
+
 <script>
     $(document).ready(function() {
-        $('.remove-favorite').click(function() {
-            var carId = $(this).data('car-id');
-            var $card = $('#car-' + carId); // Сохраняем ссылку на карточку автомобиля
+        $('.favorite-toggle').click(function(e) {
+            e.preventDefault(); // предотвращаем перезагрузку страницы
+            const button = $(this);
+            const carId = button.data('car-id');
+            const url = button.data('url');
 
             $.ajax({
-                url: '{% url "toggle_favorite" 0 %}'.replace('0', carId), // Заменяем 0 на id автомобиля
-                method: 'POST',
+                url: url,
+                type: 'POST',
                 data: {
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 success: function(response) {
-                    $card.remove(); // Удаляем карточку автомобиля из списка
-                    if ($('#car-list').children().length == 0) {
-                        $('#car-list').html('<p>У вас пока нет избранных автомобилей.</p>'); // Если избранных нет
+                    if (response.is_favorite) {
+                        button.find('.favorite-icon').show(); // Показываем "heart-fill"
+                        button.find('.non-favorite-icon').hide(); // Скрываем "heart"
+                    } else {
+                        button.find('.favorite-icon').hide(); // Скрываем "heart-fill"
+                        button.find('.non-favorite-icon').show(); // Показываем "heart"
+                        $('#car-' + carId).remove(); // Удаляем карточку, если это страница избранного
+                        if ($('#car-list').children().length === 0) {
+                            $('#car-list').html('<p>У вас пока нет избранных автомобилей.</p>');
+                        }
                     }
                 },
-                error: function(xhr) {
-                    alert('Произошла ошибка при удалении автомобиля из избранного.');
+                error: function(xhr, status, error) {
+                    alert(xhr.responseJSON.error || 'Ошибка при обработке запроса');
                 }
             });
         });
     });
 </script>
+
 
 {% endblock %}
