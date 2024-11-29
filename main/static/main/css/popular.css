@@ -1,35 +1,45 @@
+:root {
+    --card-padding: 15px;
+    --card-border-radius: 8px;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-hover-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    --button-radius: 30px;
+    --spacing: 20px;
+}
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;             /* Отступы внутри контейнера */
+    gap: var(--spacing);
+    padding: var(--spacing);
+    justify-content: center;
 }
 
 .card {
     position: relative;
-    width: 20rem;           /* Увеличиваем ширину карточки */
-    height: 28rem;          /* Увеличиваем высоту карточки */
-    display: flex;          /* Flexbox внутри карточки */
-    flex-direction: column; /* Содержимое располагается по вертикали */
-    justify-content: space-between; /* Равномерное распределение элементов */
-    margin: 10px;           /* Отступы между карточками */
-    background-color: #fff; /* Белый фон карточки */
-    border: 1px solid #ddd; /* Лёгкая рамка */
-    border-radius: 8px;     /* Скругление углов */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для объёма */
-    overflow: hidden;       /* Обрезка содержимого, если выходит за границы */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация при наведении */
+    width: 20rem;
+    height: 28rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px); /* Поднимаем карточку при наведении */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Усиливаем тень при наведении */
+    transform: translateY(-5px);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .card img {
-    width: 100%;            /* Картинка занимает всю ширину карточки */
-    height: 180px;          /* Фиксированная высота для картинок */
-    object-fit: cover;      /* Картинка подгоняется под размеры, сохраняя пропорции */
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
 }
 
 .navbar-buttons {

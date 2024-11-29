@@ -232,10 +232,12 @@ def filter_cars(request):
     if user_id:
         user = Person.objects.get(id=user_id)
         favorite_cars = user.favorite.all()
+        comparison_cars = user.comparison.all()
 
     return render(request, 'main/car_list_partial.html', {
         'cars': cars,
         'favorite_cars': favorite_cars,
+        'comparison_cars': comparison_cars,
     })
 
 
