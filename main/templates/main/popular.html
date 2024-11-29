@@ -18,7 +18,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="brand-filter">Марка автомобиля:</label>
-            <select id="brand-filter" class="form-control">
+            <select id="brand-filter" class="form-control" style="border-radius: 8px; background-color: #fff;">
                 <option value="">Все марки</option>
                 {% for brand in brands %}
                 <option value="{{ brand.id }}">{{ brand.name }}</option>
@@ -28,7 +28,7 @@
 
         <div class="form-group">
             <label for="model-filter">Модель автомобиля:</label>
-            <select id="model-filter" class="form-control" disabled>
+            <select id="model-filter" class="form-control"  style="border-radius: 8px; background-color: #fff;" disabled>
                 <option value="">Выберите модель</option>
             </select>
         </div>
@@ -37,7 +37,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="drive-type-filter">Тип привода:</label>
-            <select id="drive-type-filter" class="form-control">
+            <select id="drive-type-filter" class="form-control" style="border-radius: 8px; background-color: #fff;">
                 <option value="">Выберите тип привода</option>
                 {% for drive_type in drive_types %}
                 <option value="{{ drive_type }}">{{ drive_type }}</option>
@@ -47,7 +47,7 @@
 
         <div class="form-group">
             <label for="transmission-filter">Коробка передач:</label>
-            <select id="transmission-filter" class="form-control">
+            <select id="transmission-filter" class="form-control" style="border-radius: 8px; background-color: #fff;">
                 <option value="">Выберите коробку передач</option>
                 {% for transmission in transmissions %}
                 <option value="{{ transmission }}">{{ transmission }}</option>
@@ -59,18 +59,18 @@
     <div class="form-row">
         <div class="form-group">
             <label for="horsepower-min">Мощность (л.с.): от:</label>
-            <input type="number" id="horsepower-min" class="form-control" placeholder="Минимальная мощность">
+            <input type="number" id="horsepower-min" class="form-control" placeholder="Минимальная мощность" style="border-radius: 8px; background-color: #fff;">
         </div>
 
         <div class="form-group">
             <label for="horsepower-max">Мощность (л.с.): до:</label>
-            <input type="number" id="horsepower-max" class="form-control" placeholder="Максимальная мощность">
+            <input type="number" id="horsepower-max" class="form-control" placeholder="Максимальная мощность" style="border-radius: 8px; background-color: #fff;">
         </div>
     </div>
 
     <div class="button-container">
-        <button id="apply-filters" class="btn btn-primary" style="margin-top: 25px;">Применить фильтры</button>
-        <button id="reset-filters" class="btn btn-danger" style="margin-top: 40px;">Сбросить фильтры</button>
+        <button id="apply-filters" class="btn btn-primary" style="border-radius: 30px; padding: 10px 20px; background-color: #007bff; color: white; margin-top: 23px;">Применить фильтры</button>
+        <button id="reset-filters" class="btn btn-danger" style="border-radius: 30px; padding: 10px 20px; background-color: #dc3545; color: white;margin-top: 28px;">Сбросить фильтры</button>
     </div>
 </div>
 
