@@ -17,11 +17,14 @@ class Command(BaseCommand):
         self.stdout.write("Начинаю парсинг автомобилей с TTS.ru...")
 
         # Генерируем случайные 100 ID для парсинга
-        num_pages = 100
+        num_pages = 200
         id_range = (1790000, 1810000)  # Пример диапазона ID
         random_ids = random.sample(range(*id_range), num_pages)
 
         for auto_id in random_ids:
+            delay = random.uniform(1, 2)
+            time.sleep(delay)
+
             url = f"https://www.tts.ru/auto/detail.php?auto={auto_id}"
 
             # Парсим данные с текущей страницы

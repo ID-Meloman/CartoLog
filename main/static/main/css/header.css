@@ -16,3 +16,18 @@
 .search-result-item:hover {
     background-color: #f0f0f0;
 }
+.navbar-buttons {
+    gap: 15px;  /* Отступы между кнопками */
+}
+.navbar-icon {
+    width: 25px; /* Ширина и высота изображения, подстраивай под свои нужды */
+    height: auto; /* Высота изображения будет автоматической */
+    display: block; /* Убираем пробелы вокруг изображения */
+}
+.search-input {
+    width: 200px; /* Ширина раскрытого поля */
+    opacity: 1;
+    display: block;
+    z-index: 10;
+}
+

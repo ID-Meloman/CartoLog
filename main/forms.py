@@ -1,4 +1,5 @@
-from django.forms import ModelForm, TextInput, SelectMultiple, NumberInput, ClearableFileInput, Select
+from django.forms import ModelForm, TextInput, SelectMultiple, NumberInput, ClearableFileInput, Select, EmailInput, \
+    PasswordInput
 from django import forms
 from .models import Car, CarModel, Person
 
@@ -37,21 +38,25 @@ class NewModel(ModelForm):
 
 
 class NewPerson(ModelForm):
-    class Meta:  # Добавляем Meta, чтобы указать модель и поля
+    class Meta:
         model = Person
         fields = ['name', 'email', 'password']
         widgets = {
             'name': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Имя'
+                'placeholder': 'Имя',
+                'required': True
             }),
-            'email': TextInput(attrs={
+            'email': EmailInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Почта'
+                'placeholder': 'Почта',
+                'required': True
             }),
-            'password': TextInput(attrs={
+            'password': PasswordInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Пароль'
+                'placeholder': 'Пароль',
+                'required': True,
+                'autocomplete': 'new-password'
             })
         }
 

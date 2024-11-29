@@ -42,15 +42,8 @@
     object-fit: cover;
 }
 
-.navbar-buttons {
-    gap: 15px;  /* Отступы между кнопками */
-}
 
-.navbar-icon {
-    width: 20px; /* Ширина и высота изображения, подстраивай под свои нужды */
-    height: auto; /* Высота изображения будет автоматической */
-    display: block; /* Убираем пробелы вокруг изображения */
-}
+
 
 .detail-img {
     width: 40%;
@@ -181,13 +174,6 @@ display: flex;              /* Flexbox for the content */
     background-color: lightgreen; /* Или любой другой цвет для подсветки */
 }
 
-
-.search-input {
-    width: 200px; /* Ширина раскрытого поля */
-    opacity: 1;
-    display: block;
-    z-index: 10;
-}
 
 .favorite-icon-container {
     position: absolute;

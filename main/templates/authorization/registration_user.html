@@ -37,7 +37,12 @@
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="mb-3">
-                    {{ field.label_tag }} {{ field }}
+                    {{ field.label_tag }}
+                    {% if field.name == "email" %}
+                    <input type="email" name="{{ field.html_name }}" class="form-control" required>
+                    {% else %}
+                    {{ field }}
+                    {% endif %}
                     {% if field.errors %}
                     <div class="text-danger small">{{ field.errors }}</div>
                     {% endif %}
