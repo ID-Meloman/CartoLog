@@ -212,3 +212,57 @@ display: flex;              /* Flexbox for the content */
     padding: 0;
     cursor: pointer;
 }
+/* Общие стили для контейнеров и кнопок */
+.comparison-icon-container {
+    position: absolute;
+    top: 50px; /* Располагаем под иконкой избранного (10px + высота иконки + промежуток) */
+    right: 10px; /* Совпадает по смещению с избранным */
+    z-index: 10;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+/* Иконки */
+.in-comparison-icon,
+.not-in-comparison-icon {
+    background: none;
+    width: auto;
+    height: auto;
+    display: inline;
+    vertical-align: middle;
+    border: none;
+    padding: 0;
+}
+
+/* Скрываем/показываем иконки в зависимости от состояния */
+.in-comparison-icon {
+    display: none;
+}
+
+.not-in-comparison-icon {
+    display: inline;
+}
+
+/* Аналогичный стиль для hover */
+.comparison-icon-container:hover .in-comparison-icon,
+.comparison-icon-container:hover .not-in-comparison-icon {
+    opacity: 0.8; /* Легкий эффект прозрачности при наведении */
+}
+
+/* Стили для кнопок */
+.comparison-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Активное состояние для кнопки сравнения */
+.comparison-toggle.active .not-in-comparison-icon {
+    display: none;
+}
+
+.comparison-toggle.active .in-comparison-icon {
+    display: inline;
+}

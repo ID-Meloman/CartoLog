@@ -169,8 +169,10 @@ def popular(request):
     if user_id:
         user = Person.objects.get(id=user_id)
         favorite_cars = user.favorite.all()
+        comparison_cars = user.comparison.all()
     else:
-        favorite_cars = []  # Если пользователь не авторизован, избранное пустое
+        favorite_cars = []
+        comparison_cars = []        # Если пользователь не авторизован, избранное пустое
 
     return render(request, 'main/popular.html', {
         'filter': car_filter,
@@ -179,6 +181,7 @@ def popular(request):
         'transmissions': transmissions,
         'cars': car_filter.qs,
         'favorite_cars': favorite_cars,
+        'comparison_cars': comparison_cars,
     })
 
 

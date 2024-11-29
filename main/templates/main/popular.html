@@ -100,6 +100,22 @@
         </button>
         </form>
     </div>
+        <div class="comparison-icon-container">
+    <form method="POST" action="{% url 'toggle_comparison' item.id %}">
+        {% csrf_token %}
+        <button
+            class="comparison-toggle"
+            data-car-id="{{ item.id }}"
+            data-url="{% url 'toggle_comparison' item.id %}">
+            <svg class="not-in-comparison-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFD700"  viewBox="0 0 16 16" style="{% if item in comparison_cars %}display: none;{% else %}display: inline;{% endif %}">
+                <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1zm1 12h2V2h-2zm-3 0V7H7v7zm-5 0v-3H2v3z"/>
+            </svg>
+            <svg class="in-comparison-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFD700"  viewBox="0 0 16 16" style="{% if item in comparison_cars %}display: inline;{% else %}display: none;{% endif %}">
+                <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
+            </svg>
+        </button>
+    </form>
+</div>
 
     <div class="card-body">
         <h5 class="card-title">{{ item.model }} - {{ item.configuration.name }}</h5>
@@ -116,7 +132,35 @@
     {% endfor %}
 </div>
 
+<script>
+    $('.comparison-toggle').click(function(e) {
+    e.preventDefault(); // предотвращаем перезагрузку страницы
+    const button = $(this);
+    const carId = button.data('car-id');
+    const url = button.data('url');
 
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            if (response.is_in_comparison) {
+                button.find('.in-comparison-icon').show(); // Показываем "в сравнении"
+                button.find('.not-in-comparison-icon').hide(); // Скрываем "не в сравнении"
+            } else {
+                button.find('.in-comparison-icon').hide(); // Скрываем "в сравнении"
+                button.find('.not-in-comparison-icon').show(); // Показываем "не в сравнении"
+            }
+        },
+        error: function(xhr, status, error) {
+            alert(xhr.responseJSON.error || 'Ошибка при обработке запроса');
+        }
+    });
+});
+
+</script>
 <script>
 $('.favorite-toggle').click(function(e) {
     e.preventDefault(); // предотвращаем перезагрузку страницы
