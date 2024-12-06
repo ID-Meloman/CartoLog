@@ -2,13 +2,13 @@ from django.db import models
 from django.conf import settings
 
 
-class Car12(models.Model):
-    title = models.CharField(max_length=255)
-    horsepower = models.CharField(max_length=100, blank=True, null=True)
-    url = models.URLField()
+class Advertising(models.Model):
+    brand = models.CharField(max_length=100, verbose_name='Бренд')
+    image = models.ImageField(upload_to='ad_images/', verbose_name='Реклама', blank=True, null=True)
+    url = models.URLField(verbose_name='Ссылка на рекламный сайт', blank=True, null=True)
 
     def __str__(self):
-        return self.title
+        return self.brand
 
 
 
@@ -234,7 +234,7 @@ class CarInShowroom(models.Model):
     showroom = models.ForeignKey(Showroom, on_delete=models.CASCADE, verbose_name='Автосалон')
     quantity = models.IntegerField(verbose_name='Количество в наличии')
     price = models.IntegerField(verbose_name='Цена')
-    url = models.URLField(verbose_name='Ссылка на автомобиль в автосалоне', blank=True, null=True)  # Новое поле
+    url = models.URLField(verbose_name='Ссылка на автомобиль в автосалоне', blank=True, null=True)
 
     def __str__(self):
         return f'{self.car} - {self.showroom} - {self.quantity}'

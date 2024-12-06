@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import DetailView, DeleteView, UpdateView, ListView
-from main.models import Car, CarModel, Brand, Person, TransmissionDrive, CarInShowroom
+from main.models import Car, CarModel, Brand, Person, TransmissionDrive, CarInShowroom, Advertising
 from .forms import NewModel, NewPerson, LoginForm
 from main.filters import CarFilter
 from bs4 import BeautifulSoup
@@ -158,6 +158,7 @@ class CarDelete(DeleteView):
 
 
 def popular(request):
+    advertising = Advertising.objects.all()
     cars = Car.objects.all()
     car_filter = CarFilter(request.GET, queryset=cars)
     brands = Brand.objects.all()
@@ -182,6 +183,7 @@ def popular(request):
         'cars': car_filter.qs,
         'favorite_cars': favorite_cars,
         'comparison_cars': comparison_cars,
+        'ad': advertising,
     })
 
 

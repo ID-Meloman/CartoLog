@@ -17,7 +17,7 @@ class Command(BaseCommand):
         self.stdout.write("Начинаю парсинг автомобилей с TTS.ru...")
 
         # Генерируем случайные 100 ID для парсинга
-        num_pages = 200
+        num_pages = 100
         id_range = (1790000, 1810000)  # Пример диапазона ID
         random_ids = random.sample(range(*id_range), num_pages)
 
