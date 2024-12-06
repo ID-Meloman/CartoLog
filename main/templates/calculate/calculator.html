@@ -110,22 +110,7 @@
     </div>
 </div>
 <script>
-  document.getElementById('price').addEventListener('input', function(e) {
-    let value = e.target.value;
 
-    // Убираем все пробелы из введённого значения
-    value = value.replace(/\s/g, '');
-
-    // Преобразуем строку в число и форматируем
-    if (!isNaN(value) && value !== '') {
-      value = Number(value).toLocaleString('ru-RU'); // Форматируем с разделением разрядов
-    }
-
-    // Обновляем поле ввода отформатированным значением
-    e.target.value = value;
-  });
-
-<script>
     const calculationTypePrice = document.getElementById('calculationTypePrice');
 const calculationTypeLoan = document.getElementById('calculationTypeLoan');
 const priceFields = document.getElementById('priceFields');
