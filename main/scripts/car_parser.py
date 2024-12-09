@@ -32,6 +32,10 @@ def parse_car_page(url):
             car_data['brand'] = parts[0]  # Всё до первого пробела — это бренд
             car_data['model'] = parts[1] if len(parts) > 1 else 'Не указана'  # Остальное — это модель, если она есть
 
+            configuration_row = soup.find('td', text=re.compile(r'Комплектация', re.IGNORECASE))
+            configuration = configuration_row.find_next('td').text.strip() if configuration_row else 'base'
+            car_data['configuration'] = configuration
+
             # Извлечение технических характеристик
             # Тип топлива
             engine_type_row = soup.find('td', text=re.compile(r'Тип топлива', re.IGNORECASE))

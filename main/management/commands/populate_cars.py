@@ -141,7 +141,7 @@ class Command(BaseCommand):
 
         # Создаём конфигурацию
         configuration, created = Configuration.objects.get_or_create(
-            name=f"{car_model.name} Configuration",
+            name=car_data['configuration'],
             technical_specs=technical_specs,
             transmission_drive=transmission_drive,
             suspension_brakes=suspension_brakes,

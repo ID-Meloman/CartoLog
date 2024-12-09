@@ -4,8 +4,8 @@ from django.conf import settings
 
 class Advertising(models.Model):
     brand = models.CharField(max_length=100, verbose_name='Бренд')
-    image = models.ImageField(upload_to='ad_images/', verbose_name='Реклама', blank=True, null=True)
-    url = models.URLField(verbose_name='Ссылка на рекламный сайт', blank=True, null=True)
+    image = models.ImageField(upload_to='ad_images/', verbose_name='Реклама')
+    url = models.URLField(verbose_name='Ссылка на рекламный сайт')
 
     def __str__(self):
         return self.brand
