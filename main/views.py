@@ -238,8 +238,8 @@ def filter_cars(request):
 
     return render(request, 'main/car_list_partial.html', {
         'cars': cars,
-        'favorite_cars': favorite_cars,
-        'comparison_cars': comparison_cars,
+        # 'favorite_cars': favorite_cars,
+        # 'comparison_cars': comparison_cars,
     })
 
 

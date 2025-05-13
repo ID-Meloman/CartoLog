@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
         # Генерируем случайные 100 ID для парсинга
         num_pages = 100
-        id_range = (1790000, 1810000)  # Пример диапазона ID
+        id_range = (1840000, 1860000)  # Пример диапазона ID
         random_ids = random.sample(range(*id_range), num_pages)
 
         for auto_id in random_ids:
