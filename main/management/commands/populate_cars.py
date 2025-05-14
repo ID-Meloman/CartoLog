@@ -4,7 +4,8 @@ from django.core.management.base import BaseCommand
 from main.scripts.car_parser import parse_car_page
 from main.models import (
     Brand, CarModel, TechnicalSpecs, TransmissionDrive, SuspensionBrakes,
-    SafetyFeatures, Comfort, MultimediaConnectivity, AdditionalOptions, Configuration, Car
+    SafetyFeatures, Comfort, MultimediaConnectivity, AdditionalOptions, Configuration, Car, CarInShowroom, Showroom,
+    Dealer
 )
 import time
 import random
@@ -48,7 +49,7 @@ class Command(BaseCommand):
                                               'Неизвестная модель')  # Если модель не указана, используем значение по умолчанию
                     car_model = self.save_model(brand, model_name)
                     if car_model:
-                        self.save_full_configuration(car_model, car_data)
+                        self.save_full_configuration(car_model, car_data, url)
                 else:
                     self.stdout.write(f"Бренд '{brand_name}' не найден в базе данных. Пропускаем автомобиль.")
 
@@ -63,7 +64,7 @@ class Command(BaseCommand):
             self.stdout.write(f"Модель уже существует: {model_name} (Бренд: {brand.name})")
         return car_model
 
-    def save_full_configuration(self, car_model, car_data):
+    def save_full_configuration(self, car_model, car_data, url):
         specs_data = {
             'name': f"{car_model.name} Specs",
             'engine_type': car_data['engine_type'],
@@ -171,7 +172,6 @@ class Command(BaseCommand):
             'image_interior'  # Изображение внутри
         ]
         if created == True:
-            # Убедитесь, что `car_data['images']` содержит список ссылок на изображения
             for i, image_url in enumerate(car_data.get('images', [])[:5]):
                 img_response = requests.get(image_url)
                 img_response.raise_for_status()  # Проверяем успешность загрузки изображения
@@ -185,3 +185,22 @@ class Command(BaseCommand):
             car.save()
 
             print(f"Автомобиль {car_model.name} успешно добавлен с конфигурацией {configuration.name}")
+
+        showroom, created = Showroom.objects.get_or_create(
+            name = 'TTS',
+            address = car_data['adress'],
+            contact = car_data['contact'],
+            website = 'tts.ru',
+            latitude = 0,
+            longitude = 0,
+            dealer = Dealer.objects.get(name = 'TTS'),
+        )
+
+        carInShowroom, created = CarInShowroom.objects.get_or_create(
+            car = car,
+            showroom = showroom,
+            quantity = 1,
+            price = car_data['price'],
+            url = url,
+        )
+

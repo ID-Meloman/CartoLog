@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 import os
 
 
@@ -44,11 +45,7 @@ INSTALLED_APPS = [
     'main',
 ]
 
-# Настройки Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # URL Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_TIMEZONE = 'Europe/Moscow'  # Временная зона
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -110,6 +107,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Настройки Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # URL Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = 'Europe/Moscow'  # Временная зона
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'clear-and-populate-cars-every-24-hours': {
+        'task': 'WebProject.tasks.clear_and_populate_cars',
+        #'schedule': crontab(hour=3, minute=0),  # Каждый день в 3:00
+        # Альтернатива:
+        'schedule': 300.0,  # Каждые 24 часа (в секундах)
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

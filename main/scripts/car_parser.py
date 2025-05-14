@@ -286,6 +286,26 @@ def parse_car_page(url):
             # Сохраняем ссылки на изображения в car_data['images']
             car_data['images'] = image_urls
 
+            adress_li = soup.find('li', attrs={'title': True})
+            adress = adress_li['title'].strip() if adress_li else 'Не определенно'
+            phone_link = soup.find('a', href=re.compile(r'tel:'))
+            phone = phone_link.text.strip() if phone_link else 'Телефон не найден'
+            price_block = soup.find('div', class_='now-price-text semibold')
+            if price_block:
+                price = price_block.find('span').text.strip()
+            else:
+                price = 0
+            # Альтернативный вариант поиска цены (если первый не сработает)
+            if price == 0:
+                price_block = soup.find('div', class_='card-auto_used-price').find('div',class_='now-price-text semibold')
+                if price_block:
+                    price = price_block.find('span').text.strip()
+            # Удаление пробелов между цифрами
+            price = price.replace(' ', '')
+            car_data['adress'] = adress
+            car_data['contact'] = phone
+            car_data['price'] = price
+
             return car_data
 
         else:

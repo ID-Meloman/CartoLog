@@ -1,10 +1,8 @@
-# myproject/celery.py
-
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WebProject.settings')
 
-app = Celery('myproject')
+app = Celery('WebProject')
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()  # Автоматически ищет tasks.py в приложениях
+app.autodiscover_tasks()
